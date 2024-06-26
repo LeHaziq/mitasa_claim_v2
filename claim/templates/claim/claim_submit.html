@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center">Claim Submission Form</h1>
+        <hr class="hr">
+        <form action="{% url 'claim:submit' %}"
+              method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Display non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                        <br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <!-- Other form fields -->
+            <input type="hidden" id="hidden_location" name="program_location" value="">
+            <input type="hidden"
+                   id="hidden_accommodation_choice"
+                   name="accommodation_choice"
+                   value="">
+            <input type="hidden"
+                   id="hidden_accommodation_amount"
+                   name="accommodation_amount"
+                   value="">
+            <input type="hidden" id="hidden_meal_choice" name="meal_choice" value="">
+            <input type="hidden" id="hidden_travel_amount" name="travel_amount" value="">
+            <input type="hidden" id="hidden_toll_amount" name="toll_amount" value="">
+            <input type="hidden"
+                   id="hidden_parking_amount"
+                   name="parking_amount"
+                   value="">
+            <input type="hidden"
+                   id="hidden_plane_ticket_amount"
+                   name="plane_ticket_amount"
+                   value="">
+            <input type="hidden" id="hidden_other_amount" name="other_amount" value="">
+            <!-- Form fields go here -->
+            <div class="d-flex flex-column">
+                <div class="form-floating mb-3">
+                    {% render_field form.program_name placeholder="" class+="form-control" %}
+                    <label for="id_program_name">Program Name</label>
+                </div>
+                <div class="form-floating flex-fill mb-3">
+                    {% render_field form.program_mode placeholder="" class+="form-select" %}
+                    <label for="id_program_mode">Program Mode</label>
+                </div>
+                <div class="form-floating mb-3">
+                    {% render_field form.program_location placeholder="" class+="form-control" %}
+                    <label for="id_program_location">Program Location</label>
+                    <small class="form-text text-muted">If the program was online, please state 'Online'.</small>
+                </div>
+                <div class="form-floating flex-fill mb-3">
+                    {% render_field form.accommodation_choice placeholder="" class+="form-select" %}
+                    <label for="id_accommodation_choice">Accommodation</label>
+                </div>
+                <div class="d-flex flex-row flex-wrap justify-content-between">
+                    <div class="form-floating me-2 mb-3">
+                        {% render_field form.program_start_date placeholder="" class+="form-control" %}
+                        <label for="id_program_start_date">Program Start Date</label>
+                    </div>
+                    <div class="form-floating me-2 mb-3">
+                        {% render_field form.program_end_date placeholder="" class+="form-control" %}
+                        <label for="id_program_end_date">Program End Date</label>
+                    </div>
+                    <div class="form-floating flex-fill me-2 mb-3">
+                        {% render_field form.claim_month placeholder="" class+="form-select" %}
+                        <label for="id_claim_month">Claim Month</label>
+                    </div>
+                    <div class="form-floating flex-fill mb-3">
+                        {% render_field form.claim_year placeholder="" class+="form-control" %}
+                        <label for="id_claim_year">Claim Year</label>
+                    </div>
+                </div>
+                <div class="form-label bold-small">Program Letter:</div>
+                <div class="file-upload w-50 mb-3">{% render_field form.program_letter_file class+="form-control" %}</div>
+                <hr class="hr">
+                <!-- Meal-->
+                <div class="form-label bold-small mt-3">Meal:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50">{% render_field form.meal_choice placeholder="" class+="form-control" %}</div>
+                </div>
+                <!-- Accommodation-->
+                <div class="form-label bold-small mt-3">Accommodation:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.accommodation_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.accommodation_file type="file" class+="form-control" %}</div>
+                </div>
+                <!-- Travel -->
+                <div class="form-label bold-small mt-3">Travel:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.travel_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.travel_file type="file" class+="form-control" %}</div>
+                </div>
+                <!-- Toll -->
+                <div class="form-label bold-small mt-3">Toll:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.toll_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.toll_file type="file" class+="form-control" %}</div>
+                </div>
+                <!-- Parking -->
+                <div class="form-label bold-small mt-3">Parking:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.parking_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.parking_file type="file" class+="form-control" %}</div>
+                </div>
+                <!-- Plane -->
+                <div class="form-label bold-small mt-3">Plane Ticket:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.plane_ticket_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.plane_ticket_file type="file" class+="form-control" %}</div>
+                </div>
+                <!-- Other -->
+                <div class="form-label bold-small mt-3">Others:</div>
+                <div class="d-flex flex-row flex-wrap justify-content-start mb-4">
+                    <div class="input-group w-50 me-2">
+                        <span class="input-group-text">RM</span>
+                        {% render_field form.other_amount placeholder="" class+="form-control" %}
+                    </div>
+                    <div class="file-upload">{% render_field form.other_file type="file" class+="form-control" %}</div>
+                </div>
+            </div>
+            <hr class="hr">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    {% include "claim/js/js.html" %}
+{% endblock content %}

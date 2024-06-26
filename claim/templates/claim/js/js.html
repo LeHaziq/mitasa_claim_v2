@@ -1,0 +1,98 @@
+<script>
+        document.getElementById('id_program_mode').addEventListener('change', function() {
+            var selectedValue = this.value;
+            console.log(selectedValue);
+            var locationField = document.getElementById('id_program_location');
+            var accommodationChoiceField = document.getElementById('id_accommodation_choice');
+            var mealField = document.getElementById('id_meal_choice');
+            var accommodationField = document.getElementById('id_accommodation_amount');
+            var travelField = document.getElementById('id_travel_amount');
+            var tollField = document.getElementById('id_toll_amount');
+            var parkingField = document.getElementById('id_parking_amount');
+            var planeTicketField = document.getElementById('id_plane_ticket_amount');
+            var othersField = document.getElementById('id_other_amount');
+
+            var hiddenLocationField = document.getElementById('hidden_location')
+            var hiddenAccommodationChoiceField = document.getElementById('hidden_accommodation_choice');
+            var hiddenAccommodationField = document.getElementById('hidden_accommodation_amount');
+            var hiddenMealField = document.getElementById('hidden_meal_choice');
+            var hiddenTravelField = document.getElementById('hidden_travel_amount');
+            var hiddenTollField = document.getElementById('hidden_toll_amount');
+            var hiddenParkingField = document.getElementById('hidden_parking_amount');
+            var hiddenPlaneTicketField = document.getElementById('hidden_plane_ticket_amount');
+            var hiddenOthersField = document.getElementById('hidden_other_amount');
+
+            if (selectedValue === 'Online') {
+                locationField.disabled = true;
+                locationField.classList.add('disabled');
+                hiddenLocationField.value = "Online";
+
+                accommodationChoiceField.disabled = true;
+                accommodationChoiceField.classList.add('disabled');
+                hiddenAccommodationChoiceField.value = 0;
+
+                mealField.disabled = true;
+                mealField.classList.add('disabled');
+                hiddenMealField.value = 0;
+
+                accommodationField.disabled = true;
+                accommodationField.classList.add('disabled');
+                hiddenAccommodationField.value = 0;
+
+                travelField.disabled = true;
+                travelField.classList.add('disabled');
+                hiddenTravelField.value = 0;
+
+                tollField.disabled = true;
+                tollField.classList.add('disabled');
+                hiddenTollField.value = 0;
+
+                parkingField.disabled = true;
+                parkingField.classList.add('disabled');
+                hiddenParkingField.value = 0;
+
+                planeTicketField.disabled = true;
+                planeTicketField.classList.add('disabled');
+                hiddenPlaneTicketField.value = 0;
+
+                othersField.disabled = true;
+                othersField.classList.add('disabled');
+                hiddenOthersField.value = 0;
+            } else {
+                locationField.disabled = false;
+                locationField.classList.remove('disabled');
+                locationField.value = "";
+
+                accommodationChoiceField.disabled = false;
+                accommodationChoiceField.classList.remove('disabled');
+
+                mealField.disabled = false;
+                mealField.classList.remove('disabled');
+                hiddenMealField.value = "";
+
+                accommodationField.disabled = false;
+                accommodationField.classList.remove('disabled');
+                hiddenAccommodationField.value = "";
+
+                travelField.disabled = false;
+                travelField.classList.remove('disabled');
+                hiddenTravelField.value = "";
+
+                tollField.disabled = false;
+                tollField.classList.remove('disabled');
+                hiddenTollField.value = "";
+
+                parkingField.disabled = false;
+                parkingField.classList.remove('disabled');
+                hiddenParkingField.value = "";
+
+                planeTicketField.disabled = false;
+                planeTicketField.classList.remove('disabled');
+                hiddenPlaneTicketField.value = "";
+
+                othersField.disabled = false;
+                othersField.classList.remove('disabled');
+                hiddenOthersField.value = "";
+            }
+        });
+    </script>

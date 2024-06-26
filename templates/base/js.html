@@ -1,0 +1,19 @@
+{% load static %}
+<script src="{% static 'js/mdb.umd.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var htmlRoot = document.getElementById('htmlRoot');
+        var themingSwitcher = document.getElementById('themingSwitcher');
+        // Load theme from local storage or default to dark
+        var savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlRoot.setAttribute('data-mdb-theme', savedTheme);
+        // Set the switch based on the theme
+        themingSwitcher.checked = (savedTheme === 'dark');
+
+        themingSwitcher.addEventListener('change', function() {
+            var newTheme = themingSwitcher.checked ? 'dark' : 'light';
+            htmlRoot.setAttribute('data-mdb-theme', newTheme);
+            localStorage.setItem('theme', newTheme); // Save theme to local storage
+        });
+    });
+</script>

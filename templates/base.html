@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" id="htmlRoot" data-mdb-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MITASA Claim</title>
+        {% include 'base/css.html' %}
+    </head>
+    <body>
+        {% if request.user.is_authenticated %}
+            <!-- Navbar -->
+            <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-body-tertiary">
+                <!-- Container wrapper -->
+                <div class="container">
+                    <!-- Toggle button -->
+                    <button data-mdb-collapse-init
+                            class="navbar-toggler"
+                            type="button"
+                            data-mdb-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Collapsible wrapper -->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Navbar brand -->
+                        <a class="navbar-brand mt-2 mt-lg-0" href="#">MITASA</a>
+                        <!-- Left links -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link {% block nav_dashboard %}{% endblock nav_dashboard %}"
+                                   href="#">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% block nav_claims %}{% endblock nav_claims %}"
+                                   href="{% url 'claim:dashboard' %}">Claims</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% block nav_medical_claims %}{% endblock nav_medical_claims %}"
+                                   href="#">Medical Claims</a>
+                            </li>
+                        </ul>
+                        <!-- Left links -->
+                    </div>
+                    <!-- Collapsible wrapper -->
+                    <!-- Right elements -->
+                    <div class="d-flex align-items-center">
+                        <li class="nav-item align-items-center d-flex me-3">
+                            <i class="fas fa-sun"></i>
+                            <!-- Default switch -->
+                            <div class="ms-2 form-check form-switch">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       role="switch"
+                                       id="themingSwitcher" />
+                            </div>
+                            <i class="fas fa-moon"></i>
+                        </li>
+                        <div>
+                            <a class="me-3">{{ request.user.first_name }}</a>
+                        </div>
+                        <!-- Icon -->
+                        <!-- Avatar -->
+                        <div class="dropdown">
+                            <a data-mdb-dropdown-init
+                               class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                               href="#"
+                               id="navbarDropdownMenuAvatar"
+                               role="button"
+                               aria-expanded="false">
+                                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                                     class="rounded-circle"
+                                     height="25"
+                                     alt="Black and White Portrait of a Man"
+                                     loading="lazy" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="navbarDropdownMenuAvatar">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'user:profile' %}">My profile</a>
+                                </li>
+                                <li>
+                                    <form action="{% url 'user:logout' %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Right elements -->
+                </div>
+                <!-- Container wrapper -->
+            </nav>
+            <!-- Navbar -->
+        {% else %}
+            {% include 'nav/nav.html' %}
+        {% endif %}
+        {% block content %}
+        {% endblock content %}
+        {% include 'footer/footer.html' %}
+        {% include 'base/js.html' %}
+    </body>
+</html>

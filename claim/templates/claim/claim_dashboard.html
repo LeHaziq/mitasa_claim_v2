@@ -1,0 +1,7 @@
+{% extends "dashboard.html" %}
+{% load static %}
+{% block nav_claims %}
+    active
+{% endblock nav_claims %}
+{% block page_title %}Claim Dashboard | {{ block.super }}{% endblock page_title %}
+{% block add_claim_link %}{% url 'claim:submit' %}{% endblock add_claim_link %}

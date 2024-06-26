@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4">
+        {% include "user/alert/profile_alert.html" %}
+        <!--User Information-->
+        {% block profile %}
+            <div class="d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between">
+                    <h1>My Profile</h1>
+                    <div class="align-self-center">
+                        <a class="btn btn-secondary" href="{% url 'user:edit' %}">Update
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr class="hr">
+            </div>
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Username</label>
+                <input class="form-control"
+                       id="disabledInput"
+                       type="text"
+                       placeholder="{{ request.user.username }}"
+                       disabled="">
+            </fieldset>
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Name</label>
+                <input class="form-control"
+                       id="disabledInput"
+                       type="text"
+                       placeholder="{{ request.user.first_name }} {{ request.user.last_name }}"
+                       disabled="">
+            </fieldset>
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Email</label>
+                <input class="form-control"
+                       id="disabledInput"
+                       type="text"
+                       placeholder="{{ request.user.email }}"
+                       disabled="">
+            </fieldset>
+            <hr class="hr">
+        {% endblock profile %}
+        {% block bank %}
+            <!--Bank Information-->
+            <div class="d-flex justify-content-between mt-4">
+                <h2>User Details</h2>
+                <div class="align-self-center">
+                    {% if request.user.profile %}
+                        <a class="btn btn-secondary" href="{% url 'user:profile_edit' %}">Update
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>
+                    {% else %}
+                        <a class="btn btn-secondary" href="{% url 'user:profile_new' %}">Update
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="hr">
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Bank</label>
+                <input class="form-control"
+                       id="disabledInput"
+                       type="text"
+                       placeholder="{{ request.user.profile.bank_name }}"
+                       disabled="">
+            </fieldset>
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Account Number</label>
+                <input class="form-control"
+                       id="disabledInput"
+                       type="text"
+                       placeholder="{{ request.user.profile.account_number }}"
+                       disabled="">
+            </fieldset>
+            <fieldset class="mb-3" disabled="">
+                <label class="form-label bold-small" for="disabledInput">Phone Number</label>
+                <input class="form-control"
+                    id="disabledInput"
+                    type="text"
+                    placeholder="{{ request.user.profile.phone_number }}"
+                    disabled="">
+            </fieldset>
+        {% endblock bank %}
+    </div>
+{% endblock content %}
