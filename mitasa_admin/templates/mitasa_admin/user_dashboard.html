@@ -4,5 +4,5 @@
 <hr class="hr">
 <p class="lead">You are viewing the dashboard of <span class="text-primary">{{ user.first_name}}</span> as <span class="text-success">Admin</span></p> 
 {% endblock description %}
-{% block button_1 %}{% endblock button_1 %}
+{% block button_1 %}<a class="btn btn-dark" href="{% url 'mitasa_admin:dashboard' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Back <i class="fas fa-arrow-left"></i></a> {% endblock button_1 %}
 {% block button_2 %}{% endblock button_2 %}

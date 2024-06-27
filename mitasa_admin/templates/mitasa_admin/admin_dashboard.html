@@ -26,7 +26,7 @@
         </div>
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title text-center">Claim Budget Remaining</h5>
+                <h5 class="card-title text-center text-info">Claim Budget Remaining</h5>
                 <hr class="hr">
                 <p class="text-center lead">RM 5000</p>
             </div>
@@ -88,7 +88,7 @@
                                         <td>{{ claim.total }}</td>
                                         <td>{{ claim.amount }}</td>
                                         <td>
-                                            <a href="#">View</a>
+                                            <a href="{% url 'mitasa_admin:user_dashboard' claim.claimer__id %}">View</a>
                                         </td>
                                     </tr>
                                 {% empty %}
@@ -160,7 +160,7 @@
                                         <td>{{ user.first_name }} {{ user.last_name }}</td>
                                         <td>{{ user.email }}</td>
                                         <td>
-                                            <a href="#">View</a>
+                                            <a href="{% url 'mitasa_admin:user_dashboard' user.id %}">View</a>
                                         </td>
                                     </tr>
                                 {% empty %}
