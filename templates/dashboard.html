@@ -11,7 +11,7 @@
                 </h1>
             </div>
             <div>
-                <a class="btn btn-outline-primary" href="{% url 'claim:history' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>
+                <a class="btn btn-outline-primary" href="{% block history_link %}{% endblock history_link %} " data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>
             </div>
         </div>
         {% block cards %}
@@ -63,7 +63,7 @@
                     <h2>Pending Claims</h2>
                 </div>
                 <div>
-                    <a class="btn btn-primary" href="{% block add_claim_link %}{% endblock add_claim_link %}" data-mdb-ripple-init>Add Claim <i class="fas fa-plus"></i></a>
+                    <a class="btn btn-primary" href="{% url 'claim:submit' %}" data-mdb-ripple-init>Add Claim <i class="fas fa-plus"></i></a>
                 </div>
             </div>
             {% if pending_claims_count %}
@@ -112,7 +112,7 @@
                                                         {% for claim in claims %}
                                                             <tr>
                                                                 <td>
-                                                                    <a href="#">#{{ claim.id }}</a>
+                                                                    <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                                 </td>
                                                                 <td>{{ claim.program_name }}</td>
                                                                 <td>{{ claim.program_start_date }}</td>
@@ -240,7 +240,7 @@
                                                         {% for claim in claims %}
                                                             <tr>
                                                                 <td>
-                                                                    <a href="{% url 'claim:claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                                                    <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                                 </td>
                                                                 <td>{{ claim.program_name }}</td>
                                                                 <td>{{ claim.program_start_date }}</td>
@@ -317,7 +317,7 @@
                                             {% for claim in rejected_claims %}
                                                 <tr>
                                                     <td>
-                                                        <a href="{% url 'claim:claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                                        <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                     </td>
                                                     <td>{{ claim.program_name }}</td>
                                                     <td>{{ claim.program_start_date }}</td>

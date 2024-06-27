@@ -1,10 +1,11 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse
 from .models import Claim, Claim_Status, Approved_Claim, Rejected_Claim
-from .forms import ClaimForm
+from .forms import ClaimForm, ApproveForm, RejectForm
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db.models import Sum, Count
+from django.http import Http404
 import datetime
 
 # Constants
@@ -21,6 +22,18 @@ MONTH_NAMES = {
     10: 'October',
     11: 'November',
     12: 'December'
+}
+
+ACCOMMODATION_CHOICE = {
+    0: 'Online',
+    1: 'Provided',
+    2: 'Not provided'
+}
+
+MEAL_CHOICE = {
+    0: 'Online',
+    1: 'Provided',
+    2: 'Not provided',
 }
 
 # Long work hours > 8 hours
@@ -181,6 +194,79 @@ def claim_submit(request):
     }
 
     return render(request, 'claim/claim_submit.html', context)
+
+def claim_detail(request, claim_id):
+    claim = Claim.objects.get(pk=claim_id)
+
+    if not request.user.is_authenticated or (request.user.id != claim.claimer.id and not request.user.is_staff):
+        raise Http404("You are not authorized to access this file.")
+    
+    is_Pending = False
+    is_Approved = False
+    is_Rejected = False
+
+    if claim.claim_status.id == 1:
+        is_Pending = True
+    elif claim.claim_status.id == 2:
+        is_Approved = True
+    else:
+        is_Rejected = True
+
+    is_admin = False
+
+    if request.user.is_staff:
+        is_admin = True
+
+    approveForm = ApproveForm(prefix="approved")
+    rejectForm = RejectForm(prefix="rejected")
+
+    if request.method == 'POST':
+        if 'approve' in request.POST:
+            approveForm = ApproveForm(request.POST, request.FILES, prefix="approved")
+            if approveForm.is_valid():
+                instance = approveForm.save(commit=False)
+                instance.claim = claim
+                claim_status, created = Claim_Status.objects.get_or_create(status="Approved")
+                claim.claim_status = claim_status
+                claim.save()
+                instance.save()
+                return redirect('mitasa_admin:dashboard')
+        elif 'reject' in request.POST:
+            rejectForm = RejectForm(request.POST, prefix="rejected")
+            if rejectForm.is_valid():
+                instance = rejectForm.save(commit=False)
+                instance.claim = claim
+                claim_status, created = Claim_Status.objects.get_or_create(status="Rejected")
+                claim.claim_status = claim_status
+                claim.save()
+                instance.save()
+                return redirect('mitasa_admin:dashboard')
+        else:
+            approveForm = ApproveForm(prefix="approved")
+            rejectForm = RejectForm(prefix="rejected")
+
+    month_names = MONTH_NAMES
+    accommodation_choice = ACCOMMODATION_CHOICE
+    meal_choice = MEAL_CHOICE
+
+    context = {
+        'claim': claim,
+
+        'month_names': month_names,
+        'accommodation_choice': accommodation_choice,
+        'meal_choice': meal_choice,
+
+        'is_Pending': is_Pending,
+        'is_Approved': is_Approved,
+        'is_Rejected': is_Rejected,
+
+        'is_admin': is_admin,
+
+        'approveForm': approveForm,
+        'rejectForm': rejectForm,
+    }
+    
+    return render(request, 'detail.html', context)
 
 def claim_delete(request, claim_id):
     if request.method == 'POST':

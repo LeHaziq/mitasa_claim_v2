@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container mt-4">
+        <h1>Claim Detail</h1>
+        <hr class="hr">
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Staff ID:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.claimer.username }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Name:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.claimer.first_name }} {{ claim.claimer.last_name }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Email:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.claimer.email }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Bank:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.claimer.profile.bank_name }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Account Number:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.claimer.profile.account_number }}</p>
+            </div>
+        </div>
+        <hr class="hr">
+        <h2>Claim ID: #{{ claim.id }}</h2>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Program Name:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.program_name }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Program Letter:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">
+                    {% if claim.program_letter_file %}
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.program_letter_file.name %}" download>{{ claim.program_letter_file.name }}</a>
+                    {% else %}
+                        No file available
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Program Mode:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.program_mode }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Program Location:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.program_location }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Program Date:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.program_start_date }} - {{ claim.program_end_date }} ({{ claim.work_hours }} hours)</p>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Claim Month:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ month_names|get:claim.claim_month }} {{ claim.claim_year }}</p>
+            </div>
+        </div>
+        <hr class="hr">
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Work Allowance:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.work_amount }} ({{ claim.work_hours }} hours)</p>
+            </div>
+            <div class="col-sm-7">
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Accommodation:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">
+                    RM{{ claim.accommodation_amount }} ({{ accommodation_choice|get:claim.accommodation_choice }})
+                </p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.accommodation_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.accommodation_file.name %}" download>{{ claim.accommodation_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Meal:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.meal_amount }} ({{ meal_choice|get:claim.meal_choice }})</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.meal_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.meal_file.name %}" download>{{ claim.meal_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Travel:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.travel_amount }}</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.travel_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.travel_file.name %}" download>{{ claim.travel_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Toll:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.toll_amount }}</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.total_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.total_file.name %}" download>{{ claim.total_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Parking:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.parking_amount }}</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.parking_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.parking_file.name %}" download>{{ claim.parking_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Plane Ticket:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.plane_ticket_amount }}</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.plane_ticket_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.plane_ticket_file.name %}" download>{{ claim.plane_ticket_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Others:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.other_amount }}</p>
+            </div>
+            <div class="col-sm-7">
+                {% if claim.other_file %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.other_file.name %}" download>{{ claim.other_file.name }}</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+        </div>
+        <hr class="hr">
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Estimated Total Claim:</p>
+            <div class="col-sm-3">
+                <p class="form-control-plaintext">RM{{ claim.total_amount }}</p>
+            </div>
+        </div>
+        <hr class="hr">
+        {% if is_Pending %}
+            <div class="row mb-2">
+                <p class="col-sm-2 col-form-label bold-small">Status:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-warning">PENDING</span>
+                    </p>
+                </div>
+            </div>
+            {% if is_admin %}
+                <button type="button"
+                        class="btn btn-success"
+                        data-mdb-modal-init
+                        data-mdb-target="#approve{{ claim.id }}"
+                        data-mdb-ripple-init>Approve</button>
+                <button type="button"
+                        class="btn btn-danger"
+                        data-mdb-modal-init
+                        data-mdb-target="#reject{{ claim.id }}"
+                        data-mdb-ripple-init>Reject</button>
+            {% endif %}
+        {% elif is_Approved %}
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Status:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-success">APPROVED</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Approval Date:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext">{{ claim.approved_claim.created_at }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Receipt:</p>
+            <div class="col-sm-3">
+                {% if claim.approved_claim.receipt %}
+                    <p class="form-control-plaintext">
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.approved_claim.receipt.name %}">Download Receipt</a>
+                    </p>
+                {% else %}
+                    <p class="form-control-plaintext">No file available</p>
+                {% endif %}
+            </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Approved Amount:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext bold-small">RM{{ claim.approved_claim.amount }}</p>
+                </div>
+            </div>
+        {% elif is_Rejected %}
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Status:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-danger">REJECTED</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-sm-2 col-form-label bold-small">Reason:</p>
+                <div class="col-sm-3">
+                    <p class="form-control-plaintext">{{ claim.rejected_claim.reason }}</p>
+                </div>
+            </div>
+        {% endif %}
+        <a href="{{ request.META.HTTP_REFERER }}">
+            <button type="button" class="btn btn-secondary" data-mdb-ripple-init>Back</button>
+        </a>
+    </div>
+    <!--Approve Modal-->
+    <div class="modal fade"
+         id="approve{{ claim.id }}"
+         tabindex="-1"
+         aria-labelledby="myModalLabel2"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Claim ID: {{ claim.id }}
+                        <br />
+                        Program Name: {{ claim.program_name }}
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-mdb-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form action="{% url 'claim:detail' claim.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ approveForm|crispy }}
+                            <button name="approve" type="submit" class="btn btn-primary" data-mdb-ripple-init>Approve</button>
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal" data-mdb-ripple-init>Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!--Reject Modal-->
+    <div class="modal fade"
+         id="reject{{ claim.id }}"
+         tabindex="-1"
+         aria-labelledby="myModalLabel2"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Claim ID: {{ claim.id }}
+                        <br />
+                        Program Name: {{ claim.program_name }}
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form action="{% url 'claim:detail' claim.id %}" method="post">
+                            {% csrf_token %}
+                            {{ rejectForm|crispy }}
+                            <button name="reject" type="submit" class="btn btn-danger">Reject</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
