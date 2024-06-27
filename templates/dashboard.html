@@ -24,7 +24,7 @@
                             Pending Claims <i class="fas fa-clock"></i>
                         </h5>
                         <hr class="hr">
-                        <p class="card-text text-center lead">{{ pending_claims_count }} Claims</p>
+                        <p class="card-text text-center lead">{% block card_pending %}{{ pending_claims_count }}{% endblock card_pending %} Claims</p>
                     </div>
                 </div>
                 <div class="card">
@@ -33,7 +33,7 @@
                             Pending Amount <i class="fas fa-coins"></i>
                         </h5>
                         <hr class="hr">
-                        <p class="card-text text-center lead">RM {{ total_pending_amount }}</p>
+                        <p class="card-text text-center lead">RM {% block card_pending_amount %}{{ total_pending_amount }}{% endblock card_pending_amount %}</p>
                     </div>
                 </div>
                 <div class="card">
@@ -42,7 +42,7 @@
                             Approved Claims <i class="fas fa-check"></i>
                         </h5>
                         <hr class="hr">
-                        <p class="card-text text-center lead">{{ approved_claims_count }} Claims</p>
+                        <p class="card-text text-center lead">{% block card_approved %}{{ approved_claims_count }}{% endblock card_approved %} Claims</p>
                     </div>
                 </div>
                 <div class="card">
@@ -51,7 +51,7 @@
                             Approved Amount <i class="fas fa-hand-holding-dollar"></i>
                         </h5>
                         <hr class="hr">
-                        <p class="card-text text-center lead">RM {{ total_approved_amount }}</p>
+                        <p class="card-text text-center lead">RM {% block card_approved_amount %}{{ total_approved_amount }}{% endblock card_approved_amount %}</p>
                     </div>
                 </div>
             </div>

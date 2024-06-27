@@ -1,0 +1,165 @@
+{% extends "dashboard.html" %}
+{% block page_title %}
+    <span class="text-danger">Medical Dashboard</span> | {{ block.super }}
+{% endblock page_title %}
+{% block cards %}
+    <div class="card-group">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-center">Medical Claim Limit</h5>
+                <hr class="hr">
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+                         role="progressbar"
+                         style="width: {{ claim_limit_percentage }}"
+                         aria-valuenow="{{ claim_limit_percentage }}"
+                         aria-valuemin="0"
+                         aria-valuemax="100">{{ claim_limit_percentage }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-center text-info">Medical Claim Remaining</h5>
+                <hr class="hr">
+                <p class="text-center lead">RM {{ claim_limit }}</p>
+            </div>
+        </div>
+    </div>
+    {{ block.super }}
+{% endblock cards %}
+{% block card_pending %}
+    {{ pending_claims|length }}
+{% endblock card_pending %}
+{% block card_pending_amount %}
+    {{ pending_amount }}
+{% endblock card_pending_amount %}
+{% block card_approved %}
+    {{ approved_claims|length }}
+{% endblock card_approved %}
+{% block card_approved_amount %}
+    {{ approved_amount }}
+{% endblock card_approved_amount %}
+{% block dashboard_content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Pending Claims</h2>
+        <div class="align-self-center">
+            <a class="btn btn-primary" href="#">Add Medical Claim</a>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">List of Medical Claims</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Claim ID</th>
+                            {% if admin_view %}<th scope="col">Name</th>{% endif %}
+                            <th scope="col">Created At</th>
+                            <th scope="col">Amount (RM)</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for claim in pending_claims %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                </td>
+                                {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
+                                <td>{{ claim.created_at }}</td>
+                                <td>{{ claim.amount }}</td>
+                                <td>
+                                    <span class="badge bg-warning">{{ claim.claim_status }}</span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">No medical claims found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr class="hr">
+    <h3 class="mb-3">Approved Claims</h3>
+    <div class="card mb-3">
+        <div class="card-header">List of Medical Claims</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Claim ID</th>
+                            {% if admin_view %}<th scope="col">Name</th>{% endif %}
+                            <th scope="col">Approved At</th>
+                            <th scope="col">Amount (RM)</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for claim in approved_claims %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                </td>
+                                {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
+                                <td>{{ claim.created_at }}</td>
+                                <td>{{ claim.approved_medical_claim.amount }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ claim.claim_status }}</span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">No medical claims found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr class="hr">
+    <h3 class="mb-3">Rejected Claims</h3>
+    <div class="card mb-3">
+        <div class="card-header">List of Medical Claims</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Claim ID</th>
+                            {% if admin_view %}<th scope="col">Name</th>{% endif %}
+                            <th scope="col">Created At</th>
+                            <th scope="col">Amount (RM)</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for claim in rejected_claims %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                </td>
+                                {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
+                                <td>{{ claim.created_at }}</td>
+                                <td>{{ claim.amount }}</td>
+                                <td>
+                                    <span class="badge bg-danger">{{ claim.claim_status }}</span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">No medical claims found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock dashboard_content %}

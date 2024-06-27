@@ -25,5 +25,6 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('claim/', include('claim.urls')),
     path('staff/', include('mitasa_admin.urls')),
+    path('medical/', include('medical_claim.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
