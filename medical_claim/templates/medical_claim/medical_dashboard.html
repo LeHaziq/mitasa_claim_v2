@@ -3,6 +3,7 @@
 {% block page_title %}
     <span class="text-danger">Medical Dashboard</span> | {{ block.super }}
 {% endblock page_title %}
+{% block button_1 %}<a class="btn btn-outline-warning" href="{% url 'medical:history' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Medical Claim History <i class="fas fa-clock-rotate-left"></i></a>{% endblock button_1 %}
 {% block cards %}
     <div class="card-group">
         <div class="card mb-3">

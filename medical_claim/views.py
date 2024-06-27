@@ -68,3 +68,26 @@ def medical_submit(request):
     }
     return render(request, 'medical_claim/medical_submit.html', context)
 
+def medical_history(request):
+    claims = Medical_Claim.objects.filter(claimer=request.user)
+
+    claims_by_year_list = claims.values('claim_year').annotate(total_claims=Count('id')).annotate(total_approved_claims=Count('approved_medical_claim__claim_id')).annotate(total_approved_amount=Sum('approved_medical_claim__amount')).order_by('claim_year')
+
+    overall_claims = 0
+    overall_approved_claims = 0
+    overall_approved_amount = 0
+
+    for claim in claims_by_year_list:
+        overall_claims += (claim['total_claims']) or 0
+        overall_approved_claims += (claim['total_approved_claims']) or 0
+        overall_approved_amount += (claim['total_approved_amount']) or 0
+
+    context = {
+        'claims_by_year_list': claims_by_year_list,
+        'overall_claims': overall_claims,
+        'overall_approved_claims': overall_approved_claims,
+        'overall_approved_amount': overall_approved_amount,
+    }
+
+    return render(request, 'medical_claim/medical_history.html', context)
+
