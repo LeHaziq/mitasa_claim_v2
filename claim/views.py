@@ -1,10 +1,27 @@
 from django.shortcuts import render
-from .models import Claim, Claim_Status
+from .models import Claim, Claim_Status, Approved_Claim, Rejected_Claim
 from .forms import ClaimForm
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db.models import Sum
+import datetime
 
 # Constants
+MONTH_NAMES = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December'
+}
+
 # Long work hours > 8 hours
 SHORT_WORK_HOURS = 4
 SHORT_WORK_AMOUNT = 50.0
@@ -13,7 +30,7 @@ SHORT_MEAL_AMOUNT = 30.0
 LONG_MEAL_AMOUNT = 60.0
 
 # Methods
-def calculate_amounts(request, claim):
+def calculate_amounts(user, claim):
     # Work hours calculation
     date_1 = claim.program_start_date
     date_2 = claim.program_end_date
@@ -28,7 +45,7 @@ def calculate_amounts(request, claim):
     work_hours = divmod(hours, 24)
 
     # Check if user is staff
-    is_staff = request.user.groups.filter(name="Staff").exists()
+    is_staff = user.groups.filter(name="Staff").exists()
 
     #Exco's calculation
     if claim.program_mode == "Online":
@@ -56,40 +73,105 @@ def calculate_amounts(request, claim):
                     claim.meal_amount += SHORT_MEAL_AMOUNT
                 else:
                     claim.meal_amount += LONG_MEAL_AMOUNT
+    
+    claim.total_amount = (
+        float(claim.work_amount) +
+        float(claim.travel_amount) +
+        float(claim.accommodation_amount) +
+        float(claim.meal_amount) +
+        float(claim.toll_amount) +
+        float(claim.parking_amount) +
+        float(claim.plane_ticket_amount) +
+        float(claim.other_amount)
+    )
 
 # View functions
 def claim_dashboard(request):
+    current_year = datetime.datetime.now().year
+    claims = Claim.objects.filter(claimer=request.user.id, claim_year=current_year)
+
+    pending_claims = claims.filter(claim_status=1)
+    approved_claims = claims.filter(claim_status=2, claim_year=current_year)
+    rejected_claims = claims.filter(claim_status=3, claim_year=current_year)
+
+    approved_claims_obj = Approved_Claim.objects.filter(claim__in=approved_claims)
+
+    # Total claims
+    pending_claims_count = pending_claims.count()
+    approved_claims_count = approved_claims.count()
+    rejected_claims_count = rejected_claims.count()
+
+    # Claims by month initialization
+    pending_claims_by_month = {month: [] for month in range(1, 13)}
+    approved_claims_by_month = {month: [] for month in range(1, 13)}
+
+    total_pending_amount_by_month = {month: [] for month in range(1, 13)}
+    total_approved_amount_by_month = {month: [] for month in range(1, 13)}
+
+    # Retrieve claims and organize them by month and status
+    for month in range(1, 13):
+        month_pending_claims = pending_claims.filter(claim_month=month, claim_year=current_year)
+        month_approved_claims = approved_claims.filter(claim_month=month, claim_year=current_year)
+
+        pending_claims_by_month[month] = list(month_pending_claims)
+        approved_claims_by_month[month] = list(month_approved_claims)
+
+        total_pending_amount_by_month[month] = month_pending_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+        total_approved_amount_by_month[month] = approved_claims_obj.filter(claim__in=month_approved_claims).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    # Total amount 
+    total_pending_amount = claims.filter(claim_status=1).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    total_approved_amount = approved_claims_obj.aggregate(Sum('amount'))['amount__sum'] or 0
+
+    month_names = MONTH_NAMES
 
     context = {
+        'current_year': current_year,
+        'month_names': month_names,
 
+        'pending_claims_count': pending_claims_count,
+        'approved_claims_count': approved_claims_count,
+        'rejected_claims_count': rejected_claims_count,
+
+        'rejected_claims': rejected_claims,
+
+        'total_pending_amount': total_pending_amount,
+        'total_approved_amount': total_approved_amount,
+
+        'pending_claims_by_month': pending_claims_by_month,
+        'approved_claims_by_month': approved_claims_by_month,
+
+        'total_pending_amount_by_month': total_pending_amount_by_month,
+        'total_approved_amount_by_month': total_approved_amount_by_month,
     }
+    
     return render(request, 'claim/claim_dashboard.html', context)
 
 def claim_submit(request):
     if request.method == 'POST':
         form = ClaimForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_bound:  # Check if form is bound
+            print("TEST")
             claim = form.save(commit=False)
-            claim.claimer = request.user
-            claim_status, created = Claim_Status.objects.get_or_create(status="Pending")
-            claim.claim_status = claim_status
+            claim.claimer = request.user  # Set the claimer before validation
+            form.instance = claim  # Update the form's instance
 
-            # Amount Calculation
-            calculate_amounts(request, claim)
+            if form.is_valid():
+                try:
+                    print("TEST2")
+                    claim_status, created = Claim_Status.objects.get_or_create(status="Pending")
+                    claim.claim_status = claim_status
 
-            try:
-                claim.save()
-                messages.success(request, 'Claim submitted successfully.')
-                return render(request, 'claim/claim_submit.html', {
-                    "success": True})
-            except ValidationError as e:
-                for error in e:
-                    form.add_error(None, error)
-
-            return render(request, 'claim/claim_submit.html', {
-                "success": True})
-        else:
-            print(form.errors)
+                    # Amount Calculation
+                    calculate_amounts(request.user, claim)
+                
+                    claim.save()
+                    messages.success(request, 'Claim submitted successfully.')
+                    return render(request, 'claim/claim_submit.html', {
+                        "success": True})
+                except ValidationError as e:
+                    for error in e:
+                        form.add_error(None, error)
     else:
         form = ClaimForm()
 
