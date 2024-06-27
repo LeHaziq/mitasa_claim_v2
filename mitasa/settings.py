@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # Apps
     'user',
     'claim',
+    'mitasa_admin',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
