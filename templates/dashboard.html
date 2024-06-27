@@ -15,8 +15,9 @@
             </div>
         </div>
         {% block description %}{% endblock description %}
+        <hr class="hr">
         {% block cards %}
-            <hr class="hr">
+            
             <div class="card-group">
                 <div class="card">
                     <div class="card-body">
@@ -349,5 +350,7 @@
             {% endif %}
             <hr class="hr">
         {% endblock dashboard_content %}
+        {% block charts %}
+        {% endblock charts %}
     </div>
 {% endblock content %}

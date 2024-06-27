@@ -1,0 +1,246 @@
+<script>
+    function getBaseRgb() {
+        return {
+            r: Math.floor(Math.random() * 256), // Random between 0-255
+            g: Math.floor(Math.random() * 256), // Random between 0-255
+            b: Math.floor(Math.random() * 256)  // Random between 0-255
+        };
+    }
+
+    function getRgbaColor(r, g, b, alpha) {
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function getMonth(monthNumber) {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return months[monthNumber];
+    }
+
+    function generateCustomLegend(names, colors, charts) {
+        const legendHtml = names.map((name, index) => {
+            const color = getRgbaColor(colors[index].r, colors[index].g, colors[index].b, 0.2);
+            return `<span class="legend-item" data-index="${index}" style="display: inline-block; width: 20px; height: 20px; background-color: ${color}; margin-right: 5px; cursor: pointer;"></span>${name}<br>`;
+        }).join('');
+
+        document.getElementById('customLegend').innerHTML = legendHtml;
+
+        // Add event listeners to legend items
+        document.querySelectorAll('.legend-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                charts.forEach(chart => {
+                    const meta = chart.getDatasetMeta(0);
+                    meta.data[index].hidden = !meta.data[index].hidden;
+                    chart.update();
+                });
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const approvedClaimsData = JSON.parse('{{ approved_claims_user_data|safe }}');
+        const names = approvedClaimsData.map(data => data.claimer__first_name);
+        const approvedAmounts = approvedClaimsData.map(data => data.amount);
+        const colors = names.map(() => getBaseRgb());
+
+        const backgroundColors = colors.map(color => getRgbaColor(color.r, color.g, color.b, 0.2));
+        const borderColors = colors.map(color => getRgbaColor(color.r, color.g, color.b, 1));
+
+        const ctx1 = document.getElementById('approvedAmountsChart').getContext('2d');
+        const approvedAmountsChart = new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: names,
+                datasets: [{
+                    label: 'Approved Claims Per User',
+                    data: approvedAmounts,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Approved Claims Per User (RM)'
+                    },
+                    legend: {
+                        display: false,
+                        position: 'bottom',
+                        align: 'start'
+                    }
+                }
+            }
+        });
+
+        const approvedCounts = approvedClaimsData.map(data => data.total);
+        const ctx2 = document.getElementById('approvedClaimsChart').getContext('2d');
+        const approvedClaimsChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: names,
+                datasets: [{
+                    label: 'Approved Claims Per User',
+                    data: approvedCounts,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Approved Claims Per User'
+                    },
+                    legend: {
+                        display: false,
+                        position: 'bottom',
+                        align: 'start'
+                    }
+                }
+            }
+        });
+
+        generateCustomLegend(names, colors, [approvedAmountsChart, approvedClaimsChart]);
+
+        const approvedAmountsMonthData = JSON.parse('{{ approved_amount_month_data|safe }}');
+        const months = Object.keys(approvedAmountsMonthData).map(month => `Month ${month}`);
+        const amounts = Object.values(approvedAmountsMonthData);
+        const monthColors = months.map(() => getBaseRgb());
+
+        const monthBackgroundColors = monthColors.map(color => getRgbaColor(color.r, color.g, color.b, 0.2));
+        const monthBorderColors = monthColors.map(color => getRgbaColor(color.r, color.g, color.b, 1));
+
+        const ctx3 = document.getElementById('approvedAmountMonthChart').getContext('2d');
+        var approvedAmountsMonthChart = new Chart(ctx3, {
+            type: 'bar', // Base type
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        type: 'bar', // Bar chart dataset
+                        label: 'Bar',
+                        data: amounts,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    },
+                    {
+                        type: 'line', // Line chart dataset
+                        label: 'Line',
+                        data: amounts,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Approved Claims Per Month (RM)'
+                    },
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function(value, index, ticks) {
+                                return getMonth(value);
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var rawData = '{{ category_data|safe }}';  // Get the JSON string from Django
+        var parsedData = JSON.parse(rawData);  // Parse JSON string into JavaScript object
+
+        var ctx4 = document.getElementById('categoryChart').getContext('2d');
+        var categoryChart = new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels: parsedData.months,
+                datasets: [{
+                    label: 'Work',
+                    data: parsedData.work,
+                    backgroundColor: 'rgba(66, 245, 90, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Travel',
+                    data: parsedData.travel,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Accommodation',
+                    data: parsedData.accommodation,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Meal',
+                    data: parsedData.meal,
+                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Toll',
+                    data: parsedData.toll,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Parking',
+                    data: parsedData.parking,
+                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Plane Ticket',
+                    data: parsedData.plane_ticket,
+                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    stack: 'Stack 0'
+                }, {
+                    label: 'Other',
+                    data: parsedData.other,
+                    backgroundColor: 'rgba(199, 199, 199, 0.5)',
+                    stack: 'Stack 0'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Approved Claims by Category (RM)'
+                    },
+                }
+            }
+        });
+    });
+</script>

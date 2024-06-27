@@ -1,0 +1,29 @@
+{% extends "dashboard.html" %}
+{% block nav_dashboard %}active{% endblock nav_dashboard %}
+{% block page_title %}<span class="text-primary">Admin Dashboard</span> | {{ block.super }}{% endblock page_title %}
+{% block cards %}
+<div class="card-group">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title text-center">Yearly Claim Budget Limit</h5>
+            <hr class="hr">
+            <div class="progress" style="height: 20px;">
+                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title text-center">Claim Budget Remaining</h5>
+        <hr class="hr">
+        <p class="text-center lead">RM 5000</p>
+    </div>
+</div>
+</div>
+{{ block.super }}
+{% endblock cards %}
+{% block button_2 %}{% endblock button_2 %}
+{% block charts %}
+{% include "mitasa_admin/charts/charts.html" %}
+{% include "mitasa_admin/js/js.html" %}
+{% endblock charts %}
