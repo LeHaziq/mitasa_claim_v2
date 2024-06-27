@@ -11,9 +11,10 @@
                 </h1>
             </div>
             <div>
-                <a class="btn btn-outline-primary" href="{% block history_link %}{% endblock history_link %} " data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>
+                {% block button_1 %}<a class="btn btn-outline-warning" href="{% block history_link %}{% endblock history_link %} " data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>{% endblock button_1 %}
             </div>
         </div>
+        {% block description %}{% endblock description %}
         {% block cards %}
             <hr class="hr">
             <div class="card-group">
@@ -63,7 +64,7 @@
                     <h2>Pending Claims</h2>
                 </div>
                 <div>
-                    <a class="btn btn-primary" href="{% url 'claim:submit' %}" data-mdb-ripple-init>Add Claim <i class="fas fa-plus"></i></a>
+                    {% block button_2 %}<a class="btn btn-primary" href="{% url 'claim:submit' %}" data-mdb-ripple-init>Add Claim <i class="fas fa-plus"></i></a>{% endblock button_2 %}
                 </div>
             </div>
             {% if pending_claims_count %}

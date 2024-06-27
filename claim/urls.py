@@ -9,4 +9,5 @@ urlpatterns = [
     path('detail/<int:claim_id>', views.claim_detail, name="detail"),
     path('delete/<int:claim_id>', views.claim_delete, name="delete"),
     path('history/', views.claim_history, name="history"),
+    path('history/<int:year>', views.history_dashboard, name="history_dashboard"),
 ]

@@ -1,0 +1,8 @@
+{% extends "dashboard.html" %}
+{% block page_title %}<span class="text-danger">{{ year }} Claim History</span> | {{ block.super }}{% endblock page_title %}
+{% block description %}
+    <hr class="hr">
+    <p class="lead">This is the claim archive for the year {{ year }}</p>
+{% endblock description %}
+{% block button_1 %}<a class="btn btn-dark" href="{% url 'claim:history' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Back <i class="fas fa-arrow-left"></i></a> {% endblock button_1 %}
+{% block button_2 %}{% endblock button_2 %}

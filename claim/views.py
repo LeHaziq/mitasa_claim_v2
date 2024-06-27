@@ -297,3 +297,60 @@ def claim_history(request):
     }
 
     return render(request,'claim/claim_history.html', context)
+
+def history_dashboard(request, year):
+    # List of all the claims
+    claims = Claim.objects.filter(claimer=request.user, claim_year=year)
+    pending_claims = claims.filter(claim_status=1)
+    approved_claims = claims.filter(claim_status=2)
+    rejected_claims = claims.filter(claim_status=3)
+
+    # Total claims
+    pending_claims_count = pending_claims.count()
+    approved_claims_count = approved_claims.count()
+    rejected_claims_count = rejected_claims.count()
+
+    # Claims by month initialization
+    pending_claims_by_month = {month: [] for month in range(1, 13)}
+    approved_claims_by_month = {month: [] for month in range(1, 13)}
+
+    total_pending_amount_by_month = {month: [] for month in range(1, 13)}
+    total_approved_amount_by_month = {month: [] for month in range(1, 13)}
+
+    # Retrieve claims and organize them by month and status
+    for month in range(1, 13):
+        month_pending_claims = pending_claims.filter(claim_month=month)
+        month_approved_claims = approved_claims.filter(claim_month=month)
+
+        pending_claims_by_month[month] = list(month_pending_claims)
+        approved_claims_by_month[month] = list(month_approved_claims)
+
+        total_pending_amount_by_month[month] = month_pending_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+        total_approved_amount_by_month[month] = approved_claims.filter(id__in=month_approved_claims).aggregate(Sum('approved_claim__amount'))['approved_claim__amount__sum'] or 0
+
+    # Total amount 
+    total_pending_amount = pending_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    total_approved_amount = approved_claims.aggregate(Sum('approved_claim__amount'))['approved_claim__amount__sum'] or 0
+
+    context = {
+        'history': True,
+        'year': year,
+        'month_names': MONTH_NAMES,
+
+        'pending_claims_count': pending_claims_count,
+        'approved_claims_count': approved_claims_count,
+        'rejected_claims_count': rejected_claims_count,
+
+        'rejected_claims': rejected_claims,
+
+        'total_pending_amount': total_pending_amount,
+        'total_approved_amount': total_approved_amount,
+
+        'pending_claims_by_month': pending_claims_by_month,
+        'approved_claims_by_month': approved_claims_by_month,
+
+        'total_pending_amount_by_month': total_pending_amount_by_month,
+        'total_approved_amount_by_month': total_approved_amount_by_month,
+    }
+
+    return render(request, 'claim/history_dashboard.html', context)

@@ -4,10 +4,10 @@
     <div class="container mt-4">
         <h1>{% block page_title %}{{ request.user.first_name }}{% endblock page_title %}</h1>
         <div class="divider mb-3"></div>
-        <div class="card bg-light">
+        <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="align-self-center"><i class="fa-solid fa-list fa-lg"></i> List of Claims by Year</div>
-                <div class="align-self-center"><a class="btn btn-dark" href="{% url 'claim:dashboard' %}">Back</a></div>
+                <div class="align-self-center"><a class="btn btn-dark" href="{% url 'claim:dashboard' %}">Back <i class="fas fa-arrow-left"></i></a></div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -29,7 +29,7 @@
                                     <td>{{ claim.total_approved_claims }}</td>
                                     <td>{{ claim.total_approved_amount|default:"0" }}</td>
                                     <td>
-                                        <a href="#">View</a>
+                                        <a href="{% url 'claim:history_dashboard' claim.claim_year %}">View</a>
                                     </td>
                                 </tr>
                             {% empty %}
