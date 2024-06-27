@@ -1,29 +1,203 @@
 {% extends "dashboard.html" %}
-{% block nav_dashboard %}active{% endblock nav_dashboard %}
-{% block page_title %}<span class="text-primary">Admin Dashboard</span> | {{ block.super }}{% endblock page_title %}
+{% block nav_dashboard %}
+    active
+{% endblock nav_dashboard %}
+{% block page_title %}
+    <span class="text-primary">Admin Dashboard</span> | {{ block.super }}
+{% endblock page_title %}
+{% block history_link %}
+    {% url 'mitasa_admin:history' %}
+{% endblock history_link %}
 {% block cards %}
-<div class="card-group">
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title text-center">Yearly Claim Budget Limit</h5>
-            <hr class="hr">
-            <div class="progress" style="height: 20px;">
-                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+    <div class="card-group">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-center">Yearly Claim Budget Limit</h5>
+                <hr class="hr">
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+                         role="progressbar"
+                         style="width: 25%"
+                         aria-valuenow="25"
+                         aria-valuemin="0"
+                         aria-valuemax="100">25%</div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-center">Claim Budget Remaining</h5>
+                <hr class="hr">
+                <p class="text-center lead">RM 5000</p>
             </div>
         </div>
     </div>
-    <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title text-center">Claim Budget Remaining</h5>
-        <hr class="hr">
-        <p class="text-center lead">RM 5000</p>
-    </div>
-</div>
-</div>
-{{ block.super }}
+    {{ block.super }}
 {% endblock cards %}
-{% block button_2 %}{% endblock button_2 %}
+{% block user_table %}
+    <!--Claims/Exco Table-->
+    <div class="d-flex flex-column flex-wrap flex-fill">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active"
+                   data-mdb-tab-init
+                   href="#claims"
+                   aria-selected="true"
+                   role="tab">Claims</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link"
+                   data-mdb-tab-init
+                   href="#excos"
+                   aria-selected="false"
+                   role="tab"
+                   tabindex="-1">Excos</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link"
+                   data-mdb-tab-init
+                   href="#staffs"
+                   aria-selected="false"
+                   role="tab"
+                   tabindex="-1">Staffs</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="claims" role="tabpanel">
+                <div class="card border-primary flex-fill mt-3 mb-3"
+                     style="max-height: 300px">
+                    <div class="card-header">List of Pending Claims</div>
+                    <div class="card-body">
+                        <div class="table-responsive" style="max-height: 230px;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Staff ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Pending Claims</th>
+                                        <th scope="col">Total Pending Amount (RM)</th>
+                                        <th scope="col">Action</th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for claim in pending_claims_by_user %}
+                                    <tr>
+                                        <td>{{ claim.claimer__username }}</td>
+                                        <td>{{ claim.claimer__first_name }}</td>
+                                        <td>{{ claim.total }}</td>
+                                        <td>{{ claim.amount }}</td>
+                                        <td>
+                                            <a href="#">View</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td class="text-center" colspan="5">No pending claims.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="excos" role="tabpanel">
+            <div class="card border-primary flex-fill mt-3 mb-3"
+                 style="max-height: 300px">
+                <div class="card-header">List of Excos</div>
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 230px;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Staff ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in excos %}
+                                    <tr>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <a href="{% url 'mitasa_admin:user_dashboard' user.id %}">View</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td class="text-center" colspan="4">No excos found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="staffs" role="tabpanel">
+            <div class="card border-primary flex-fill mt-3 mb-3"
+                 style="max-height: 300px">
+                <div class="card-header">List of Staffs</div>
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 230px;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Staff ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in staffs %}
+                                    <tr>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <a href="#">View</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td class="text-center" colspan="4">No excos found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="hr">
+{% endblock user_table %}
+{% block button_2 %}
+{% endblock button_2 %}
+{% block pending_th %}
+    <th>Claimer</th>
+{% endblock pending_th %}
+{% block pending_td %}
+    <td>{{ claim.claimer.first_name }}</td>
+{% endblock pending_td %}
+{% block approved_th %}
+    <th>Claimer</th>
+{% endblock approved_th %}
+{% block approved_td %}
+    <td>{{ claim.claimer.first_name }}</td>
+{% endblock approved_td %}
+{% block rejected_th %}
+    <th>Claimer</th>
+{% endblock rejected_th %}
+{% block rejected_td %}
+    <td>{{ claim.claimer.first_name }}</td>
+{% endblock rejected_td %}
 {% block charts %}
-{% include "mitasa_admin/charts/charts.html" %}
-{% include "mitasa_admin/js/js.html" %}
+    {% include "mitasa_admin/charts/charts.html" %}
+    {% include "mitasa_admin/js/js.html" %}
 {% endblock charts %}

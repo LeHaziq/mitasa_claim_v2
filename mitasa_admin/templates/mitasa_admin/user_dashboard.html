@@ -1,0 +1,8 @@
+{% extends "dashboard.html" %}
+{% block page_title %}{{ user.first_name }}{% endblock page_title %}
+{% block description %}
+<hr class="hr">
+<p class="lead">You are viewing the dashboard of <span class="text-primary">{{ user.first_name}}</span> as <span class="text-success">Admin</span></p> 
+{% endblock description %}
+{% block button_1 %}{% endblock button_1 %}
+{% block button_2 %}{% endblock button_2 %}

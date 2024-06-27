@@ -11,13 +11,12 @@
                 </h1>
             </div>
             <div>
-                {% block button_1 %}<a class="btn btn-outline-warning" href="{% block history_link %}{% endblock history_link %} " data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>{% endblock button_1 %}
+                {% block button_1 %}<a class="btn btn-outline-warning" href="{% block history_link %}{% endblock history_link %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Claim History <i class="fas fa-clock-rotate-left"></i></a>{% endblock button_1 %}
             </div>
         </div>
         {% block description %}{% endblock description %}
         <hr class="hr">
         {% block cards %}
-            
             <div class="card-group">
                 <div class="card">
                     <div class="card-body">
@@ -58,6 +57,8 @@
             </div>
             <hr class="hr">
         {% endblock cards %}
+        {% block user_table %}
+        {% endblock user_table %}
         {% block dashboard_content %}
             <!--PENDING CLAIMS-->
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -102,6 +103,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">Claim ID</th>
+                                                            {% block pending_th %}{% endblock pending_th %}
                                                             <th scope="col">Program Name</th>
                                                             <th scope="col">Program Date</th>
                                                             <th scope="col">Created At</th>
@@ -116,6 +118,7 @@
                                                                 <td>
                                                                     <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                                 </td>
+                                                                {% block pending_td %}{% endblock pending_td %}
                                                                 <td>{{ claim.program_name }}</td>
                                                                 <td>{{ claim.program_start_date }}</td>
                                                                 <td>{{ claim.created_at }}</td>
@@ -230,6 +233,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">Claim ID</th>
+                                                            {% block approved_th %}{% endblock approved_th %}
                                                             <th scope="col">Program Name</th>
                                                             <th scope="col">Program Date</th>
                                                             <th scope="col">Created At</th>
@@ -244,6 +248,7 @@
                                                                 <td>
                                                                     <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                                 </td>
+                                                                {% block approved_td %}{% endblock approved_td %}
                                                                 <td>{{ claim.program_name }}</td>
                                                                 <td>{{ claim.program_start_date }}</td>
                                                                 <td>{{ claim.created_at }}</td>
@@ -308,6 +313,7 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Claim ID</th>
+                                                {% block rejected_th %}{% endblock rejected_th %}
                                                 <th scope="col">Program Name</th>
                                                 <th scope="col">Program Date</th>
                                                 <th scope="col">Created At</th>
@@ -321,6 +327,7 @@
                                                     <td>
                                                         <a href="{% url 'claim:detail' claim.id %}">#{{ claim.id }}</a>
                                                     </td>
+                                                    {% block rejected_td %}{% endblock rejected_td %}
                                                     <td>{{ claim.program_name }}</td>
                                                     <td>{{ claim.program_start_date }}</td>
                                                     <td>{{ claim.created_at }}</td>
