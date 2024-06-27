@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container mt-4">
+        <h1>{% block page_title %}{{ request.user.first_name }}{% endblock page_title %}</h1>
+        <div class="divider mb-3"></div>
+        <div class="card bg-light">
+            <div class="card-header d-flex justify-content-between">
+                <div class="align-self-center"><i class="fa-solid fa-list fa-lg"></i> List of Claims by Year</div>
+                <div class="align-self-center"><a class="btn btn-dark" href="{% url 'claim:dashboard' %}">Back</a></div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Year</th>
+                                <th scope="col">Total Claims</th>
+                                <th scope="col">Approved Claims</th>
+                                <th scope="col">Approved Amount (RM)</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for claim in claims_by_year_list %}
+                                <tr>
+                                    <td>{{ claim.claim_year }}</td>
+                                    <td>{{ claim.total_claims }}</td>
+                                    <td>{{ claim.total_approved_claims }}</td>
+                                    <td>{{ claim.total_approved_amount|default:"0" }}</td>
+                                    <td>
+                                        <a href="#">View</a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td class="text-center" colspan="5">No claims found.</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="bold">Total</td>
+                                <td>{{ overall_claims }}</td>
+                                <td>{{ overall_approved_claims }}</td>
+                                <td colspan="2">{{ overall_approved_amount }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

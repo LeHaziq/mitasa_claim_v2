@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
+from django.urls import reverse
 from .models import Claim, Claim_Status, Approved_Claim, Rejected_Claim
 from .forms import ClaimForm
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.db.models import Sum
+from django.db.models import Sum, Count
 import datetime
 
 # Constants
@@ -180,3 +181,33 @@ def claim_submit(request):
     }
 
     return render(request, 'claim/claim_submit.html', context)
+
+def claim_delete(request, claim_id):
+    if request.method == 'POST':
+        claim = Claim.objects.get(pk=claim_id)
+        claim.delete()
+    
+    return HttpResponseRedirect(reverse('claim:dashboard'))
+
+def claim_history(request):
+    claims = Claim.objects.filter(claimer=request.user)
+
+    claims_by_year_list = claims.values('claim_year').annotate(total_claims=Count('id')).annotate(total_approved_claims=Count('approved_claim__claim_id')).annotate(total_approved_amount=Sum('approved_claim__amount')).order_by('claim_year')
+
+    overall_claims = 0
+    overall_approved_claims = 0
+    overall_approved_amount = 0
+
+    for claim in claims_by_year_list:
+        overall_claims += (claim['total_claims']) or 0
+        overall_approved_claims += (claim['total_approved_claims']) or 0
+        overall_approved_amount += (claim['total_approved_amount']) or 0
+
+    context = {
+        'claims_by_year_list': claims_by_year_list,
+        'overall_claims': overall_claims,
+        'overall_approved_claims': overall_approved_claims,
+        'overall_approved_amount': overall_approved_amount,
+    }
+
+    return render(request,'claim/claim_history.html', context)
