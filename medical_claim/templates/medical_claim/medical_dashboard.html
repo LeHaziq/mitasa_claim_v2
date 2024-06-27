@@ -1,4 +1,5 @@
 {% extends "dashboard.html" %}
+{% block nav_medical_claims %}active{% endblock nav_medical_claims %}
 {% block page_title %}
     <span class="text-danger">Medical Dashboard</span> | {{ block.super }}
 {% endblock page_title %}
@@ -11,7 +12,7 @@
                 <div class="progress" style="height: 20px;">
                     <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
                          role="progressbar"
-                         style="width: {{ claim_limit_percentage }}"
+                         style="width: {{ claim_limit_percentage }}%"
                          aria-valuenow="{{ claim_limit_percentage }}"
                          aria-valuemin="0"
                          aria-valuemax="100">{{ claim_limit_percentage }}%</div>
@@ -22,7 +23,7 @@
             <div class="card-body">
                 <h5 class="card-title text-center text-info">Medical Claim Remaining</h5>
                 <hr class="hr">
-                <p class="text-center lead">RM {{ claim_limit }}</p>
+                <p class="text-center lead">RM {{ claim_limit }} <span class="text-danger">/ {{ yearly_limit }}</span></p>
             </div>
         </div>
     </div>
@@ -44,7 +45,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Pending Claims</h2>
         <div class="align-self-center">
-            <a class="btn btn-primary" href="#">Add Medical Claim</a>
+            <a class="btn btn-primary" href="{% url 'medical:submit' %}" data-mdb-ripple-init>Add Medical Claim <i class="fas fa-plus"></i></a>
         </div>
     </div>
     <div class="card mb-3">
@@ -65,7 +66,7 @@
                         {% for claim in pending_claims %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                    <a href="#">#{{ claim.id }}</a>
                                 </td>
                                 {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
                                 <td>{{ claim.created_at }}</td>
