@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # Apps
     'user',
     'claim',
+    'medical_claim',
     'mitasa_admin',
 ]
 
