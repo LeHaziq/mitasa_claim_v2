@@ -18,24 +18,28 @@
         <hr class="hr">
         {% block cards %}
             <div class="card-group">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-warning">
-                            Pending Claims <i class="fas fa-clock"></i>
-                        </h5>
-                        <hr class="hr">
-                        <p class="card-text text-center lead">{% block card_pending %}{{ pending_claims_count }}{% endblock card_pending %} Claims</p>
+                {% block card_1 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center text-warning">
+                                Pending Claims <i class="fas fa-clock"></i>
+                            </h5>
+                            <hr class="hr">
+                            <p class="card-text text-center lead">{% block card_pending %}{{ pending_claims_count }}{% endblock card_pending %} Claims</p>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-warning">
-                            Pending Amount <i class="fas fa-coins"></i>
-                        </h5>
-                        <hr class="hr">
-                        <p class="card-text text-center lead">RM {% block card_pending_amount %}{{ total_pending_amount }}{% endblock card_pending_amount %}</p>
+                {% endblock card_1 %}
+                {% block card_2 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center text-warning">
+                                Pending Amount <i class="fas fa-coins"></i>
+                            </h5>
+                            <hr class="hr">
+                            <p class="card-text text-center lead">RM {% block card_pending_amount %}{{ total_pending_amount }}{% endblock card_pending_amount %}</p>
+                        </div>
                     </div>
-                </div>
+                {% endblock card_2 %}
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title text-center text-success">

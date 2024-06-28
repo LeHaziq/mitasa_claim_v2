@@ -1,3 +1,5 @@
 {% extends "history.html" %}
-{% block page_title %}Medical Claim History | {{ block.super }}{% endblock page_title %}
+{% block page_title %}<span class="text-danger">Medical History</span> | {{ block.super }}{% endblock page_title %}
 {% block back_link %}{% url 'medical:dashboard' %}{% endblock back_link %}
+{% block view_link %}{% url 'medical:history_dashboard' claim.claim_year %}{% endblock view_link %}
+

@@ -29,9 +29,21 @@
                         <a class="navbar-brand mt-2 mt-lg-0" href="#">MITASA</a>
                         <!-- Left links -->
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link {% block nav_dashboard %}{% endblock nav_dashboard %}"
-                                   href="{% url 'mitasa_admin:dashboard' %}">Dashboard</a>
+                            <li class="nav-item dropdown">
+                                <a data-mdb-dropdown-init
+                                   class="nav-link dropdown-toggle {% block nav_dashboard%}{% endblock nav_dashboard%}"
+                                   href="#"
+                                   id="navbarDropdownMenuLink"
+                                   role="button"
+                                   aria-expanded="false">Admin Dashboard</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'mitasa_admin:dashboard' %}">Claims</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'mitasa_admin:medical_dashboard' %}">Medical Claims</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {% block nav_claims %}{% endblock nav_claims %}"

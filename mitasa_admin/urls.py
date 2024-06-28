@@ -8,4 +8,5 @@ urlpatterns = [
     path('history/', views.admin_history, name="history"),
     path('history/<int:year>', views.history_admin_dashboard, name="history_dashboard"),
     path('user/<int:user_id>', views.user_dashboard, name="user_dashboard"),
+    path('medical/dashboard/', views.medical_dashboard, name='medical_dashboard'),
 ]

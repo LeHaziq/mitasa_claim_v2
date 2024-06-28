@@ -47,7 +47,7 @@ class Medical_Claim(models.Model):
             created_at__year= current_year
         ).aggregate(total_amount=Sum('amount'))['total_amount'] or 0
 
-        total_claimed = pending_claims + approved_claims
+        total_claimed = approved_claims
 
         if total_claimed + self.amount > YEARLY_LIMIT:
             raise ValidationError(f'You have exceeded your claim limit for the year. Yearly Limit: RM{YEARLY_LIMIT}, Total claimed: RM{total_claimed}, Attempted claim: RM{self.amount}')

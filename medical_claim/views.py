@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.urls import reverse
 from .models import Medical_Claim
 from django.db.models import Sum, Count
@@ -26,8 +26,7 @@ def medical_dashboard(request):
     yearly_limit = YEARLY_CLAIM_LIMIT
     claim_limit = yearly_limit - (pending_amount + approved_amount)
 
-    claim_limit_percentage = math.ceil(claim_limit / yearly_limit * 100)
-    print(type(claim_limit_percentage))
+    claim_limit_percentage = 100 - math.ceil(claim_limit / yearly_limit * 100)
 
     context = {
         'yearly_limit': yearly_limit,
@@ -68,6 +67,66 @@ def medical_submit(request):
     }
     return render(request, 'medical_claim/medical_submit.html', context)
 
+def medical_detail(request, claim_id):
+    claim = Medical_Claim.objects.get(pk=claim_id)
+
+    is_Pending = False
+    is_Approved = False
+    is_Rejected = False
+
+    if claim.claim_status.id == 1:
+        is_Pending = True
+    if claim.claim_status.id == 2:
+        is_Approved = True
+    if claim.claim_status.id == 3:
+        is_Rejected = True
+
+    is_admin = False
+    if request.user.is_staff:
+        is_admin = True
+
+    approveForm = ApproveMedicalForm(prefix="approved")
+    rejectForm = RejectMedicalForm(prefix="rejected")
+
+    if request.method == 'POST':
+        if 'approve' in request.POST:
+            approveForm = ApproveMedicalForm(request.POST, request.FILES, prefix="approved")
+            if approveForm.is_valid():
+                instance = approveForm.save(commit=False)
+                instance.claim = claim
+                claim_status, created = Claim_Status.objects.get_or_create(status="Approved")
+                claim.claim_status = claim_status
+                claim.save()
+                instance.save()
+                return redirect('mitasa_admin:medical_dashboard')
+        elif 'reject' in request.POST:
+            rejectForm = RejectMedicalForm(request.POST, prefix="rejected")
+            if rejectForm.is_valid():
+                instance = rejectForm.save(commit=False)
+                instance.claim = claim
+                claim_status, created = Claim_Status.objects.get_or_create(status="Rejected")
+                claim.claim_status = claim_status
+                claim.save()
+                instance.save()
+                return redirect('mitasa_admin:medical_dashboard')
+        else:
+            approveForm = ApproveMedicalForm(prefix="approved")
+            rejectForm = RejectMedicalForm(prefix="rejected")
+
+    context = {
+        'claim': claim,
+
+        'is_Pending': is_Pending,
+        'is_Approved': is_Approved,
+        'is_Rejected': is_Rejected,
+
+        'is_admin': is_admin,
+
+        'approveForm': approveForm,
+        'rejectForm': rejectForm,
+    }
+    return render(request, 'medical_claim/medical_detail.html', context)
+
 def medical_history(request):
     claims = Medical_Claim.objects.filter(claimer=request.user)
 
@@ -90,4 +149,24 @@ def medical_history(request):
     }
 
     return render(request, 'medical_claim/medical_history.html', context)
+
+def medical_history_dashboard(request, year):
+    claims = Medical_Claim.objects.filter(claimer=request.user, claim_year=year)
+    pending_claims = claims.filter(claim_status=1)
+    approved_claims = claims.filter(claim_status=2)
+    rejected_claims = claims.filter(claim_status=3)
+
+    approved_amount = approved_claims.aggregate(Sum("approved_medical_claim__amount"))["approved_medical_claim__amount__sum"] or 0
+
+    context = {
+        'is_staff': True,
+        'year': year,
+        'claims': claims,
+        'pending_claims': pending_claims,  
+        'approved_claims': approved_claims,  
+        'rejected_claims': rejected_claims,
+        'approved_amount': approved_amount,
+    }
+
+    return render(request, 'medical_claim/medical_history_dashboard.html', context)
 

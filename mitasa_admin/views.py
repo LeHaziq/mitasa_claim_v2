@@ -2,9 +2,12 @@ from django.shortcuts import render
 from django.http import Http404
 from django.contrib.auth.models import User
 from claim.models import Claim, Approved_Claim
+from medical_claim.models import Medical_Claim
 from django.db.models import Sum, Count, Q
 import simplejson as json
 import datetime
+
+from medical_claim.models import YEARLY_LIMIT
 
 # Constants
 MONTH_NAMES = {
@@ -331,3 +334,47 @@ def user_dashboard(request, user_id):
         'total_approved_amount_by_month': total_approved_amount_by_month,
     }
     return render(request, 'mitasa_admin/user_dashboard.html', context)
+
+def medical_dashboard(request):
+
+    if not request.user.is_staff:
+        raise Http404("You are not authorized to access this file.")
+    
+    current_year = datetime.datetime.now().year
+
+    staffs = User.objects.filter(groups__name="Staff")
+
+    claims = Medical_Claim.objects.filter(claim_year=current_year)
+    pending_claims = claims.filter(claim_status=1)
+    approved_claims = claims.filter(claim_status=2)
+    rejected_claims = claims.filter(claim_status=3)
+
+    pending_amount = pending_claims.aggregate(Sum("amount"))["amount__sum"] or 0
+    approved_amount = approved_claims.aggregate(Sum("amount"))["amount__sum"] or 0
+
+    pending_claims_by_user = staffs.values('id', 'username', 'first_name').annotate(pending_claims=Count('medical_claim__id', filter=Q(medical_claim__claim_status__id=1) & Q(medical_claim__claim_year=current_year))).annotate(pending_amount=Sum('medical_claim__amount', filter=Q(medical_claim__claim_status__id=1) & Q(medical_claim__claim_year=current_year))).annotate(approved_amount=Sum('medical_claim__amount', filter=Q(medical_claim__claim_status__id=2) & Q(medical_claim__claim_year=current_year))).order_by('-pending_claims')
+
+    yearly_limit = YEARLY_LIMIT
+
+    claim_balance_by_user = {}
+
+    for claim in pending_claims_by_user:
+        username = claim['username']  # Accessing dictionary keys with string literals
+        user_pending_amount = claim['pending_amount'] if claim['pending_amount'] is not None else 0
+        user_approved_amount = claim['approved_amount'] if claim['approved_amount'] is not None else 0
+        claim_balance_by_user[username] = yearly_limit - user_pending_amount - user_approved_amount
+
+    print(claim_balance_by_user)
+
+    context = {
+        'admin_view': True,
+        'pending_claims_by_user': pending_claims_by_user,
+        'claim_balance_by_user': claim_balance_by_user,
+        'pending_claims': pending_claims,
+        'approved_claims': approved_claims,
+        'rejected_claims': rejected_claims,
+        'pending_amount': pending_amount,
+        'approved_amount': approved_amount,
+    }
+
+    return render(request, 'mitasa_admin/medical_dashboard.html', context)

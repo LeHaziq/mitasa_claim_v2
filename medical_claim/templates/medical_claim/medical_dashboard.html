@@ -1,33 +1,35 @@
 {% extends "dashboard.html" %}
 {% block nav_medical_claims %}active{% endblock nav_medical_claims %}
 {% block page_title %}
-    <span class="text-danger">Medical Dashboard</span> | {{ block.super }}
+    <span class="text-primary">Medical Dashboard</span> | {{ block.super }}
 {% endblock page_title %}
 {% block button_1 %}<a class="btn btn-outline-warning" href="{% url 'medical:history' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Medical Claim History <i class="fas fa-clock-rotate-left"></i></a>{% endblock button_1 %}
 {% block cards %}
-    <div class="card-group">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title text-center">Medical Claim Limit</h5>
-                <hr class="hr">
-                <div class="progress" style="height: 20px;">
-                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
-                         role="progressbar"
-                         style="width: {{ claim_limit_percentage }}%"
-                         aria-valuenow="{{ claim_limit_percentage }}"
-                         aria-valuemin="0"
-                         aria-valuemax="100">{{ claim_limit_percentage }}%</div>
+    {% block card_claim_limit %}
+        <div class="card-group">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Medical Claim Limit</h5>
+                    <hr class="hr">
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            style="width: {{ claim_limit_percentage }}%"
+                            aria-valuenow="{{ claim_limit_percentage }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100">{{ claim_limit_percentage }}%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-info">Medical Claim Remaining</h5>
+                    <hr class="hr">
+                    <p class="text-center lead">RM {{ claim_limit }} <span class="text-danger">/ {{ yearly_limit }}</span></p>
                 </div>
             </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title text-center text-info">Medical Claim Remaining</h5>
-                <hr class="hr">
-                <p class="text-center lead">RM {{ claim_limit }} <span class="text-danger">/ {{ yearly_limit }}</span></p>
-            </div>
-        </div>
-    </div>
+    {% endblock card_claim_limit %}
     {{ block.super }}
 {% endblock cards %}
 {% block card_pending %}
@@ -46,7 +48,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Pending Claims</h2>
         <div class="align-self-center">
-            <a class="btn btn-primary" href="{% url 'medical:submit' %}" data-mdb-ripple-init>Add Medical Claim <i class="fas fa-plus"></i></a>
+            {% block button_2 %}<a class="btn btn-primary" href="{% url 'medical:submit' %}" data-mdb-ripple-init>Add Medical Claim <i class="fas fa-plus"></i></a>{% endblock button_2 %} 
         </div>
     </div>
     <div class="card mb-3">
@@ -67,7 +69,7 @@
                         {% for claim in pending_claims %}
                             <tr>
                                 <td>
-                                    <a href="#">#{{ claim.id }}</a>
+                                    <a href="{% url 'medical:detail' claim.id %}">#{{ claim.id }}</a>
                                 </td>
                                 {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
                                 <td>{{ claim.created_at }}</td>
@@ -106,7 +108,7 @@
                         {% for claim in approved_claims %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                    <a href="{% url 'medical:detail' claim.id %}">#{{ claim.id }}</a>
                                 </td>
                                 {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
                                 <td>{{ claim.created_at }}</td>
@@ -145,7 +147,7 @@
                         {% for claim in rejected_claims %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'medical:medical_claim_detail' claim.id %}">#{{ claim.id }}</a>
+                                    <a href="{% url 'medical:detail' claim.id %}">#{{ claim.id }}</a>
                                 </td>
                                 {% if admin_view %}<td>{{ claim.claimer.first_name }}</td>{% endif %}
                                 <td>{{ claim.created_at }}</td>
