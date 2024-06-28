@@ -49,7 +49,7 @@
             <div class="col-sm-10">
                 <p class="form-control-plaintext">
                     {% if claim.program_letter_file %}
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.program_letter_file.name %}" download>{{ claim.program_letter_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.program_letter_file.name %}" download>{{ claim.program_letter_file.name }}</a>
                     {% else %}
                         No file available
                     {% endif %}
@@ -99,7 +99,7 @@
             <div class="col-sm-7">
                 {% if claim.accommodation_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.accommodation_file.name %}" download>{{ claim.accommodation_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.accommodation_file.name %}" download>{{ claim.accommodation_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -114,7 +114,7 @@
             <div class="col-sm-7">
                 {% if claim.meal_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.meal_file.name %}" download>{{ claim.meal_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.meal_file.name %}" download>{{ claim.meal_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -129,7 +129,7 @@
             <div class="col-sm-7">
                 {% if claim.travel_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.travel_file.name %}" download>{{ claim.travel_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.travel_file.name %}" download>{{ claim.travel_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -144,7 +144,7 @@
             <div class="col-sm-7">
                 {% if claim.total_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.total_file.name %}" download>{{ claim.total_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.total_file.name %}" download>{{ claim.total_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -159,7 +159,7 @@
             <div class="col-sm-7">
                 {% if claim.parking_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.parking_file.name %}" download>{{ claim.parking_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.parking_file.name %}" download>{{ claim.parking_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -174,7 +174,7 @@
             <div class="col-sm-7">
                 {% if claim.plane_ticket_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.plane_ticket_file.name %}" download>{{ claim.plane_ticket_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.plane_ticket_file.name %}" download>{{ claim.plane_ticket_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -189,7 +189,7 @@
             <div class="col-sm-7">
                 {% if claim.other_file %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.other_file.name %}" download>{{ claim.other_file.name }}</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.other_file.name %}" download>{{ claim.other_file.name }}</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>
@@ -245,7 +245,7 @@
             <div class="col-sm-3">
                 {% if claim.approved_claim.receipt %}
                     <p class="form-control-plaintext">
-                        <i class="fa-regular fa-file"></i> <a href="{% url 'claim:download' claim.approved_claim.receipt.name %}">Download Receipt</a>
+                        <i class="fa-regular fa-file"></i> <a href="{% url 'helper:download' claim.approved_claim.receipt.name %}">Download Receipt</a>
                     </p>
                 {% else %}
                     <p class="form-control-plaintext">No file available</p>

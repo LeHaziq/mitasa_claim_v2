@@ -170,3 +170,9 @@ def medical_history_dashboard(request, year):
 
     return render(request, 'medical_claim/medical_history_dashboard.html', context)
 
+def claim_delete(request, claim_id):
+    if request.method == 'POST':
+        claim = Medical_Claim.objects.get(pk=claim_id)
+        claim.delete()
+    
+    return HttpResponseRedirect(reverse('medical:dashboard'))

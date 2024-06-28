@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'claim',
     'medical_claim',
     'mitasa_admin',
+    'helper'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -144,6 +145,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 MEDIA_URL = 'media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
