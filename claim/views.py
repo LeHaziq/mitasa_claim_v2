@@ -212,11 +212,6 @@ def claim_detail(request, claim_id):
     else:
         is_Rejected = True
 
-    is_admin = False
-
-    if request.user.is_staff:
-        is_admin = True
-
     approveForm = ApproveForm(prefix="approved")
     rejectForm = RejectForm(prefix="rejected")
 
@@ -259,8 +254,6 @@ def claim_detail(request, claim_id):
         'is_Pending': is_Pending,
         'is_Approved': is_Approved,
         'is_Rejected': is_Rejected,
-
-        'is_admin': is_admin,
 
         'approveForm': approveForm,
         'rejectForm': rejectForm,

@@ -213,7 +213,7 @@
                     </p>
                 </div>
             </div>
-            {% if is_admin %}
+            {% if request.user.is_staff %}
                 <button type="button"
                         class="btn btn-success"
                         data-mdb-modal-init

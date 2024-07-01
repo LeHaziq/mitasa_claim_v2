@@ -140,7 +140,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <!-- Button - Delete Claim -->
-                                                                    {% if claim.claim_status.id == 1 %}
+                                                                    {% if request.user == claim.claimer %}
                                                                         <button type="button"
                                                                                 class="btn btn-danger"
                                                                                 data-mdb-modal-init

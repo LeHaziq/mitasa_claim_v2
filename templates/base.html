@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load custom_filters %}
 <html lang="en" id="htmlRoot" data-mdb-theme="light">
     <head>
         <meta charset="UTF-8">
@@ -29,30 +30,34 @@
                         <a class="navbar-brand mt-2 mt-lg-0" href="#">MITASA</a>
                         <!-- Left links -->
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item dropdown">
-                                <a data-mdb-dropdown-init
-                                   class="nav-link dropdown-toggle {% block nav_dashboard%}{% endblock nav_dashboard%}"
-                                   href="#"
-                                   id="navbarDropdownMenuLink"
-                                   role="button"
-                                   aria-expanded="false">Admin Dashboard</a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li>
-                                        <a class="dropdown-item" href="{% url 'mitasa_admin:dashboard' %}">Claims</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{% url 'mitasa_admin:medical_dashboard' %}">Medical Claims</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            {% if request.user|has_group:"Admin" %}
+                                <li class="nav-item dropdown">
+                                    <a data-mdb-dropdown-init
+                                    class="nav-link dropdown-toggle {% block nav_dashboard%}{% endblock nav_dashboard%}"
+                                    href="#"
+                                    id="navbarDropdownMenuLink"
+                                    role="button"
+                                    aria-expanded="false">Admin Dashboard</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'mitasa_admin:dashboard' %}">Claims</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'mitasa_admin:medical_dashboard' %}">Medical Claims</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link {% block nav_claims %}{% endblock nav_claims %}"
                                    href="{% url 'claim:dashboard' %}">Claims</a>
                             </li>
+                            {% if request.user|has_group:"Staff" %}
                             <li class="nav-item">
                                 <a class="nav-link {% block nav_medical_claims %}{% endblock nav_medical_claims %}"
                                    href="{% url 'medical:dashboard' %}">Medical Claims</a>
                             </li>
+                            {% endif %}
                         </ul>
                         <!-- Left links -->
                     </div>
@@ -93,6 +98,11 @@
                                 <li>
                                     <a class="dropdown-item" href="{% url 'user:profile' %}">My profile</a>
                                 </li>
+                                {% if request.user.is_staff %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'admin:index' %}">Django Admin</a>
+                                    </li>
+                                {% endif %}
                                 <li>
                                     <form action="{% url 'user:logout' %}" method="post">
                                         {% csrf_token %}

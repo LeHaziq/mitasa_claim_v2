@@ -76,7 +76,7 @@
                     </p>
                 </div>
             </div>
-            {% if not request.user.is_staff%}
+            {% if request.user == claim.claimer %}
                 <button type="button"
                         class="btn btn-danger"
                         data-mdb-modal-init
