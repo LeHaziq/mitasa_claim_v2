@@ -176,7 +176,7 @@
                 </div>
             </div>
         {% endif %}
-        <a href="{% url 'medical:dashboard' %}">
+        <a href="{{ request.META.HTTP_REFERER }}">
             <button type="button" class="btn btn-secondary">Back</button>
         </a>
     </div>

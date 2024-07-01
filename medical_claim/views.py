@@ -159,7 +159,6 @@ def medical_history_dashboard(request, year):
     approved_amount = approved_claims.aggregate(Sum("approved_medical_claim__amount"))["approved_medical_claim__amount__sum"] or 0
 
     context = {
-        'is_staff': True,
         'year': year,
         'claims': claims,
         'pending_claims': pending_claims,  

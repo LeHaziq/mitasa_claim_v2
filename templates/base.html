@@ -48,10 +48,25 @@
                                     </ul>
                                 </li>
                             {% endif %}
-                            <li class="nav-item">
-                                <a class="nav-link {% block nav_claims %}{% endblock nav_claims %}"
-                                   href="{% url 'claim:dashboard' %}">Claims</a>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a data-mdb-dropdown-init
+                                    class="nav-link dropdown-toggle {% block nav_claims %}{% endblock nav_claims %}"
+                                    href="#"
+                                    id="navbarDropdownMenuLink"
+                                    role="button"
+                                    aria-expanded="false">Claims</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'claim:dashboard' %}">Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'claim:history' %}">Claim History</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'claim:submit' %}">Submit Claim</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             {% if request.user|has_group:"Staff" %}
                             <li class="nav-item">
                                 <a class="nav-link {% block nav_medical_claims %}{% endblock nav_medical_claims %}"

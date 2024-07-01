@@ -86,13 +86,14 @@
                                             data-mdb-target="#panelsStayOpen-collapse_{{ month }}"
                                             aria-expanded="true"
                                             aria-controls="panelsStayOpen-collapse_{{ month }}">
-                                        <div class="d-flex w-100 justify-content-between me-4 ">
+                                        <div class="d-flex w-100 justify-content-between me-4 h6">
                                             {{ month_names|get:month }}
                                             <span class="d-flex">
                                                 <p class="m-0 me-4">
-                                                    <span class="bold-small">Total Pending:</span>RM{{ total_pending_amount_by_month|get:month }}
+                                                    <span>Total Pending:</span> RM{{ total_pending_amount_by_month|get:month }}
                                                 </p>
-                                                <span class="badge rounded-pill bg-warning">{{ claims|length }}</span>
+                                                <div><span class="badge rounded-pill bg-warning">{{ claims|length }}</span></div>
+                                                
                                             </span>
                                         </div>
                                     </button>
@@ -216,13 +217,13 @@
                                             data-mdb-target="#panelsStayOpen-collapse_approved_{{ month }}"
                                             aria-expanded="true"
                                             aria-controls="panelsStayOpen-collapse_approved_{{ month }}">
-                                        <div class="d-flex w-100 justify-content-between me-4 ">
+                                        <div class="d-flex w-100 justify-content-between me-4 h6">
                                             {{ month_names|get:month }}
                                             <span class="d-flex">
                                                 <p class="m-0 me-4">
-                                                    <span class="bold-small">Total Pending:</span>RM{{ total_approved_amount_by_month|get:month }}
+                                                    <span>Total Pending:</span> RM{{ total_approved_amount_by_month|get:month }}
                                                 </p>
-                                                <span class="badge rounded-pill bg-success">{{ claims|length }}</span>
+                                                <div><span class="badge rounded-pill bg-success">{{ claims|length }}</span></div>
                                             </span>
                                         </div>
                                     </button>
@@ -297,11 +298,11 @@
                                     data-mdb-target="#panelsStayOpen-collapse_rejected"
                                     aria-expanded="true"
                                     aria-controls="panelsStayOpen-collapse_rejected">
-                                <div class="d-flex w-100 justify-content-between me-4 ">
+                                <div class="d-flex w-100 justify-content-between me-4 h6">
                                     Rejected Claims
                                     <span class="d-flex">
                                         <p class="m-0 me-4">
-                                            <span class="text-start bold-small"></span>
+                                            <span class="text-start h5"></span>
                                         </p>
                                         <span class="badge rounded-pill bg-danger">{{ rejected_claims|length }}</span>
                                     </span>

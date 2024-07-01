@@ -336,7 +336,6 @@ def user_dashboard(request, user_id):
     return render(request, 'mitasa_admin/user_dashboard.html', context)
 
 def medical_dashboard(request):
-
     if not request.user.is_staff:
         raise Http404("You are not authorized to access this file.")
     
@@ -363,8 +362,6 @@ def medical_dashboard(request):
         user_pending_amount = claim['pending_amount'] if claim['pending_amount'] is not None else 0
         user_approved_amount = claim['approved_amount'] if claim['approved_amount'] is not None else 0
         claim_balance_by_user[username] = yearly_limit - user_pending_amount - user_approved_amount
-
-    print(claim_balance_by_user)
 
     context = {
         'admin_view': True,

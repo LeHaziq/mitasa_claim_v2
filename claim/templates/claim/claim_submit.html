@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
+{% block nav_claims %}
+    active
+{% endblock nav_claims %}
 {% block content %}
     <div class="container mt-4">
         {% if success %}
