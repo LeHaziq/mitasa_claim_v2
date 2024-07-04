@@ -375,3 +375,21 @@ def medical_dashboard(request):
     }
 
     return render(request, 'mitasa_admin/medical_dashboard.html', context)
+
+def history_table(request, year):
+    claims = Claim.objects.filter(claim_year=year)
+    approved_claims = claims.filter(claim_status__status="Approved")
+
+    approved_claims_count = approved_claims.count()
+
+    total_approved_amount = approved_claims.aggregate(Sum('approved_claim__amount'))['approved_claim__amount__sum'] or 0
+
+    context = {
+        "claims": claims,
+        "year": year,
+
+        "approved_claims_count": approved_claims_count,
+        "total_approved_amount": total_approved_amount
+    }
+
+    return render(request, "history_table.html", context)

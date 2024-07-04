@@ -1,0 +1,84 @@
+{% extends "dashboard.html" %}
+{% block page_title %}<span class="text-warning">{{ year }} Claim History</span>{% endblock page_title %}
+{% block card_1 %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center text-primary">
+                Total Claims <i class="fas fa-scroll"></i>
+            </h5>
+            <hr class="hr">
+            <p class="card-text text-center lead">{{ claims|length }} Claims</p>
+        </div>
+    </div>
+{% endblock card_1 %}
+{% block card_2 %}{% endblock card_2 %}
+{% block button_1 %}{% endblock button_1 %}
+{% block dashboard_content %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between">
+            <div class="form-control" data-mdb-input-init>
+                <label class="form-label" for="nameFilter">Name</label>
+                <input type="text" id="nameFilter" onkeyup="filterFunction()" class="form-control" />
+            </div>
+            <div class="form-select" data-mdb-input-init>
+                <label class="form-label" for="statusFilter">Status</label>
+                <select id="statusFilter" onchange="filterFunction()" class="form-control">
+                    <option value="">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+        <hr class="hr">
+        <table class="table table-striped table-hover mt-2" id="myTable">
+            <thead>
+                <tr>
+                    <th>Claim ID</th>
+                    <th>Claimer</th>
+                    <th>Date</th>
+                    <th>Amount (RM)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for claim in claims  %}
+                    <tr>
+                        <td>{{ claim.id }}</td>
+                        <td>{{ claim.claimer.first_name }}</td>
+                        <td>{{ claim.created_at }}</td>
+                        <td>{{ claim.total_amount }}</td>
+                        <td>{{ claim.claim_status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function filterFunction() {
+            // Declare variables
+            var nameInput, statusInput, nameFilter, statusFilter, table, tr, td, i, nameTxtValue, statusTxtValue;
+            nameInput = document.getElementById("nameFilter");
+            statusInput = document.getElementById("statusFilter");
+            nameFilter = nameInput.value.toUpperCase();
+            statusFilter = statusInput.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                nameTd = tr[i].getElementsByTagName("td")[1];
+                statusTd = tr[i].getElementsByTagName("td")[4];
+                if (nameTd && statusTd) {
+                    nameTxtValue = nameTd.textContent || nameTd.innerText;
+                    statusTxtValue = statusTd.textContent || statusTd.innerText;
+                    if (nameTxtValue.toUpperCase().indexOf(nameFilter) > -1 && statusTxtValue.toUpperCase().indexOf(statusFilter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock dashboard_content %}
