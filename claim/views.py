@@ -89,7 +89,7 @@ def calculate_amounts(user, claim):
                     claim.meal_amount += LONG_MEAL_AMOUNT
 
     # Travel amount calculations
-    claim.travel_amount = float(claim.travel_amount) * 0.80
+    claim.travel_amount = float(claim.travel_distance) * 0.80
     
     claim.total_amount = (
         float(claim.work_amount) +
