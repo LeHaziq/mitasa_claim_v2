@@ -108,7 +108,7 @@
                     <div class="form-label bold-small mt-3">Mileage:</div>
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
-                            {% render_field form.travel_amount placeholder="" class+="form-control" %}
+                            {% render_field form.travel_amount placeholder="" class+="form-control" min="0" %}
                             <span class="input-group-text">KM</span>
                         </div>
                         <div class="file-upload">{% render_field form.travel_file %}</div>
@@ -118,7 +118,7 @@
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
                             <span class="input-group-text">RM</span>
-                            {% render_field form.toll_amount placeholder="" class+="form-control" %}
+                            {% render_field form.toll_amount placeholder="" class+="form-control" min="0" %}
                         </div>
                         <div class="file-upload">{% render_field form.toll_file %}</div>
                     </div>
@@ -127,7 +127,7 @@
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
                             <span class="input-group-text">RM</span>
-                            {% render_field form.parking_amount placeholder="" class+="form-control" %}
+                            {% render_field form.parking_amount placeholder="" class+="form-control" min="0" %}
                         </div>
                         <div class="file-upload">{% render_field form.parking_file %}</div>
                     </div>
@@ -136,7 +136,7 @@
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
                             <span class="input-group-text">RM</span>
-                            {% render_field form.plane_ticket_amount placeholder="" class+="form-control" %}
+                            {% render_field form.plane_ticket_amount placeholder="" class+="form-control" min="0"%}
                         </div>
                         <div class="file-upload">{% render_field form.plane_ticket_file %}</div>
                     </div>
@@ -145,7 +145,7 @@
                     <div class="d-flex flex-row flex-wrap justify-content-start mb-4">
                         <div class="input-group w-50 me-2">
                             <span class="input-group-text">RM</span>
-                            {% render_field form.other_amount placeholder="" class+="form-control" %}
+                            {% render_field form.other_amount placeholder="" class+="form-control" min="0" %}
                         </div>
                         <div class="file-upload">{% render_field form.other_file %}</div>
                     </div>
