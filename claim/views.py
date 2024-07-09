@@ -201,7 +201,7 @@ def claim_submit(request):
 def claim_detail(request, claim_id):
     claim = Claim.objects.get(pk=claim_id)
 
-    if not request.user.is_authenticated or (request.user.id != claim.claimer.id and not request.user.is_staff):
+    if request.user.id != claim.claimer.id and not request.user.is_staff and not request.user.groups.filter(name="Admin").exists():
         raise Http404("You are not authorized to access this file.")
     
     is_Pending = False

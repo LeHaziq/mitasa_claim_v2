@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.contrib.auth.models import User
 from claim.models import Claim, Approved_Claim
@@ -59,8 +60,10 @@ def category_chart(request, year):
     return json_data
 
 # View functions
+@login_required(login_url='user:login')
 def admin_dashboard(request):
-    if not request.user.is_staff:
+
+    if not request.user.groups.filter(name="Admin").exists() and not request.user.is_staff :
         raise Http404("You are not authorized to access this file.")
     
     current_year = datetime.datetime.now().year
@@ -153,7 +156,12 @@ def admin_dashboard(request):
     }
     return render(request, 'mitasa_admin/admin_dashboard.html', context)
 
+@login_required(login_url='user:login')
 def admin_history(request):
+
+    if not request.user.groups.filter(name="Admin").exists() and not request.user.is_staff :
+        raise Http404("You are not authorized to access this file.")
+    
     claims = Claim.objects.all()
 
     claims_by_year_list = claims.values('claim_year').annotate(total_claims=Count('id')).annotate(total_approved_claims=Count('approved_claim__claim_id')).annotate(total_approved_amount=Sum('approved_claim__amount')).order_by('claim_year')
@@ -175,9 +183,10 @@ def admin_history(request):
     }
     return render(request, 'mitasa_admin/admin_history.html', context)
 
+@login_required(login_url='user:login')
 def user_dashboard(request, user_id):
 
-    if not request.user.is_staff:
+    if not request.user.groups.filter(name="Admin").exists() and not request.user.is_staff :
         raise Http404("You are not authorized to access this file.")
     
     current_year = datetime.datetime.now().year
@@ -241,8 +250,10 @@ def user_dashboard(request, user_id):
     }
     return render(request, 'mitasa_admin/user_dashboard.html', context)
 
+@login_required(login_url='user:login')
 def medical_dashboard(request):
-    if not request.user.is_staff:
+
+    if not request.user.groups.filter(name="Admin").exists() and not request.user.is_staff :
         raise Http404("You are not authorized to access this file.")
     
     current_year = datetime.datetime.now().year
@@ -282,7 +293,12 @@ def medical_dashboard(request):
 
     return render(request, 'mitasa_admin/medical_dashboard.html', context)
 
+@login_required(login_url='user:login')
 def history_table(request, year):
+
+    if not request.user.groups.filter(name="Admin").exists() and not request.user.is_staff :
+        raise Http404("You are not authorized to access this file.")
+    
     claims = Claim.objects.filter(claim_year=year)
     approved_claims = claims.filter(claim_status__status="Approved")
 
