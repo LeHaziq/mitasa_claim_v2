@@ -89,8 +89,9 @@
                     <div class="form-label bold-small">Program Letter:</div>
                     <div class="file-upload w-50 mb-3">{% render_field form.program_letter_file %}</div>
                     <hr class="hr">
+                    <p class="lead">Please fill in the relevant fields only</p>
                     <!-- Meal-->
-                    <div class="form-label bold-small mt-3">Meal:</div>
+                    <div class="form-label bold-small">Meal:</div>
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50">{% render_field form.meal_choice placeholder="" class+="form-control" %}</div>
                     </div>
@@ -99,16 +100,16 @@
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
                             <span class="input-group-text">RM</span>
-                            {% render_field form.accommodation_amount placeholder="" class+="form-control" %}
+                            {% render_field form.accommodation_amount placeholder="" class+="form-control" min="0" %}
                         </div>
                         <div class="file-upload">{% render_field form.accommodation_file %}</div>
                     </div>
                     <!-- Travel -->
-                    <div class="form-label bold-small mt-3">Travel:</div>
+                    <div class="form-label bold-small mt-3">Mileage:</div>
                     <div class="d-flex flex-row flex-wrap justify-content-start">
                         <div class="input-group w-50 me-2">
-                            <span class="input-group-text">RM</span>
                             {% render_field form.travel_amount placeholder="" class+="form-control" %}
+                            <span class="input-group-text">KM</span>
                         </div>
                         <div class="file-upload">{% render_field form.travel_file %}</div>
                     </div>
