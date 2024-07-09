@@ -65,6 +65,7 @@ class Claim(models.Model):
     work_hours = models.IntegerField(default=0)
     work_amount = models.DecimalField(decimal_places=2, max_digits=7, default=0)
 
+    travel_distance = models.DecimalField(decimal_places=2, max_digits=7, default=0)
     travel_amount = models.DecimalField(decimal_places=2, max_digits=7, default=0)
     travel_file = models.FileField(upload_to=user_directory_path, null=True, blank=True)
 
