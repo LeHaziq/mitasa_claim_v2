@@ -90,7 +90,7 @@ class Claim(models.Model):
 
     total_amount = models.DecimalField(decimal_places=2, max_digits=7, default=0)
     
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     claim_status = models.ForeignKey(Claim_Status, on_delete=models.SET_NULL, null=True)
 
     def clean(self):
