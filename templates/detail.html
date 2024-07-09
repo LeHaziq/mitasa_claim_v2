@@ -80,6 +80,12 @@
                 <p class="form-control-plaintext">{{ month_names|get:claim.claim_month }} {{ claim.claim_year }}</p>
             </div>
         </div>
+        <div class="row">
+            <p class="col-sm-2 col-form-label bold-small">Created At:</p>
+            <div class="col-sm-10">
+                <p class="form-control-plaintext">{{ claim.created_at }} ({{ claim.created_at|timesince }} ago)</p>
+            </div>
+        </div>
         <hr class="hr">
         <div class="row">
             <p class="col-sm-2 col-form-label bold-small">Work Allowance:</p>
