@@ -1,5 +1,5 @@
 {% extends "history.html" %}
 {% block page_title %}Claim History{% endblock page_title %}
 {% block back_link %}{% url 'mitasa_admin:dashboard' %}{% endblock back_link %}
-{% block view_link %}{% url 'mitasa_admin:history_dashboard' claim.claim_year %}{% endblock view_link %}
+{% block view_link %}{% url 'mitasa_admin:history_table' claim.claim_year %}{% endblock view_link %}
 

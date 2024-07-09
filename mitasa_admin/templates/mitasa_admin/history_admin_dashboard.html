@@ -1,7 +1,0 @@
-{% extends "mitasa_admin/admin_dashboard.html" %}
-{% block page_title %}<span class="text-danger">{{ current_year }} Admin Archive</span>{% endblock page_title %}
-{% block button_1 %}<a class="btn btn-dark" href="{% url 'mitasa_admin:history' %}" data-mdb-ripple-init data-mdb-ripple-color="dark">Back <i class="fas fa-arrow-left"></i></a>{% endblock button_1 %}
-{% block description %}
-<hr class="hr">
-<p class="lead">This is the claim archive for the year <span class="text-danger">{{ current_year }}</span> for all users</p>
-{% endblock description %}

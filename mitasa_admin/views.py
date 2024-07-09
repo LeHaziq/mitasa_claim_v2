@@ -175,100 +175,6 @@ def admin_history(request):
     }
     return render(request, 'mitasa_admin/admin_history.html', context)
 
-def history_admin_dashboard(request, year):
-    if not request.user.is_staff:
-        raise Http404("You are not authorized to access this file.")
-    
-    current_year = year
-    users = User.objects.filter(is_staff=False)
-    staffs = users.filter(groups__name="Staff")
-    excos = users.filter(groups__name="Exco")
-
-    # List of all the claims
-    claims = Claim.objects.filter(claim_year=current_year)
-    pending_claims = claims.filter(claim_status=1, claim_year=current_year)
-    approved_claims = claims.filter(claim_status=2, claim_year=current_year)
-    rejected_claims = claims.filter(claim_status=3, claim_year=current_year)
-
-    outstanding_claims = claims.filter(claim_status=1, claim_year=current_year-1)
-    total_outstanding_amount = outstanding_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
-
-    # Total claims
-    pending_claims_count = pending_claims.count()
-    approved_claims_count = approved_claims.count()
-    rejected_claims_count = rejected_claims.count()
-
-    # Claims by month initialization
-    pending_claims_by_month = {month: [] for month in range(1, 13)}
-    approved_claims_by_month = {month: [] for month in range(1, 13)}
-
-    total_pending_amount_by_month = {month: [] for month in range(1, 13)}
-    total_approved_amount_by_month = {month: [] for month in range(1, 13)}
-
-    # Retrieve claims and organize them by month and status
-    for month in range(1, 13):
-        month_pending_claims = pending_claims.filter(claim_month=month)
-        month_approved_claims = approved_claims.filter(claim_month=month)
-
-        pending_claims_by_month[month] = list(month_pending_claims)
-        approved_claims_by_month[month] = list(month_approved_claims)
-
-        total_pending_amount_by_month[month] = month_pending_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
-        total_approved_amount_by_month[month] = approved_claims.filter(id__in=month_approved_claims).aggregate(Sum('approved_claim__amount'))['approved_claim__amount__sum'] or 0
-
-    # Total amount 
-    total_pending_amount = pending_claims.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
-    total_approved_amount = approved_claims.aggregate(Sum('approved_claim__amount'))['approved_claim__amount__sum'] or 0
-
-    # Claims by user (Table)
-    pending_claims_by_user = claims.filter(claim_status=1).values('claimer__id','claimer__username', 'claimer__first_name').annotate(total=Count("id")).annotate(amount=Sum("total_amount")).order_by('claimer__username')
-
-    # Charts Data
-    approved_claims_by_user = approved_claims.values('claimer__first_name').annotate(total=Count("id")).annotate(amount=Sum("approved_claim__amount"))
-
-    # approved_amount_by_month = approved_claims.values('claim_month').annotate(total_amount=Sum('approved_claim__amount')).order_by('claim_month')
-
-    approved_claims_user_data = json.dumps(list(approved_claims_by_user))
-    approved_amount_month_data = json.dumps(total_approved_amount_by_month)
-
-    category_data = category_chart(request, current_year)
-
-    month_names = MONTH_NAMES
-
-    context = {
-        'current_year': current_year,
-        'month_names': month_names,
-
-        'users': users,
-        'excos': excos,
-        'staffs': staffs,
-
-        'pending_claims_count': pending_claims_count,
-        'approved_claims_count': approved_claims_count,
-        'rejected_claims_count': rejected_claims_count,
-
-        'outstanding_claims': outstanding_claims,
-        'rejected_claims': rejected_claims,
-
-        'total_pending_amount': total_pending_amount,
-        'total_outstanding_amount': total_outstanding_amount,
-        'total_approved_amount': total_approved_amount,
-
-        'pending_claims_by_month': pending_claims_by_month,
-        'approved_claims_by_month': approved_claims_by_month,
-
-        'total_pending_amount_by_month': total_pending_amount_by_month,
-        'total_approved_amount_by_month': total_approved_amount_by_month,
-
-        'pending_claims_by_user': pending_claims_by_user,
-
-        # Graphs
-        'approved_claims_user_data': approved_claims_user_data,
-        'approved_amount_month_data': approved_amount_month_data,
-        'category_data': category_data
-    }
-    return render(request, 'mitasa_admin/history_admin_dashboard.html', context)
-
 def user_dashboard(request, user_id):
 
     if not request.user.is_staff:
@@ -392,4 +298,4 @@ def history_table(request, year):
         "total_approved_amount": total_approved_amount
     }
 
-    return render(request, "history_table.html", context)
+    return render(request, "mitasa_admin/history_table.html", context)

@@ -21,15 +21,6 @@
                 <input type="text" id="nameFilter" onkeyup="filterFunction()" class="form-control" />
             </div>
             <div class="form-select" data-mdb-input-init>
-                <label class="form-label" for="statusFilter">Status</label>
-                <select id="statusFilter" onchange="filterFunction()" class="form-control">
-                    <option value="">All</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
-                </select>
-            </div>
-            <div class="form-select" data-mdb-input-init>
                 <label class="form-label" for="monthFilter">Month</label>
                 <select id="monthFilter" onchange="filterFunction()" class="form-control">
                     <option value="">All</option>
@@ -47,6 +38,15 @@
                     <option value="12">December</option>
                 </select>
             </div>
+            <div class="form-select" data-mdb-input-init>
+                <label class="form-label" for="statusFilter">Status</label>
+                <select id="statusFilter" onchange="filterFunction()" class="form-control">
+                    <option value="">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
         </div>
         <hr class="hr">
         <table class="table table-striped table-hover mt-2" id="myTable">
@@ -54,6 +54,7 @@
                 <tr>
                     <th>Claim ID</th>
                     <th>Claimer</th>
+                    <th>Program Name</th>
                     <th>Date</th>
                     <th>Amount (RM)</th>
                     <th>Status</th>
@@ -62,10 +63,17 @@
             <tbody>
                 {% for claim in claims  %}
                     <tr>
-                        <td>{{ claim.id }}</td>
+                        <td><a href="{% url 'claim:detail' claim.id %}"># {{ claim.id }}</a></td>
                         <td>{{ claim.claimer.first_name }}</td>
+                        <td>{{ claim.program_name }}</td>
                         <td>{{ claim.created_at }}</td>
-                        <td>{{ claim.total_amount }}</td>
+                        <td>
+                            {% if claim.approved_claim %}
+                                {{ claim.approved_claim.amount }}
+                            {% else %}
+                                {{ claim.total_amount }}
+                            {% endif %}
+                        </td>
                         <td>{{ claim.claim_status }}</td>
                     </tr>
                 {% endfor %}
@@ -75,22 +83,30 @@
     <script>
         function filterFunction() {
             // Declare variables
-            var nameInput, statusInput, nameFilter, statusFilter, table, tr, td, i, nameTxtValue, statusTxtValue;
+            var nameInput, statusInput, monthInput, nameFilter, statusFilter, monthFilter, table, tr, td, i, nameTxtValue, statusTxtValue, dateTxtValue;
             nameInput = document.getElementById("nameFilter");
             statusInput = document.getElementById("statusFilter");
+            monthInput = document.getElementById("monthFilter");
             nameFilter = nameInput.value.toUpperCase();
             statusFilter = statusInput.value.toUpperCase();
+            monthFilter = monthInput.value;
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
 
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 nameTd = tr[i].getElementsByTagName("td")[1];
-                statusTd = tr[i].getElementsByTagName("td")[4];
-                if (nameTd && statusTd) {
+                statusTd = tr[i].getElementsByTagName("td")[5];
+                dateTd = tr[i].getElementsByTagName("td")[3];
+                if (nameTd && statusTd && dateTd) {
                     nameTxtValue = nameTd.textContent || nameTd.innerText;
                     statusTxtValue = statusTd.textContent || statusTd.innerText;
-                    if (nameTxtValue.toUpperCase().indexOf(nameFilter) > -1 && statusTxtValue.toUpperCase().indexOf(statusFilter) > -1) {
+                    dateTxtValue = dateTd.textContent || dateTd.innerText;
+                    var dateMonth = new Date(dateTxtValue).getMonth() + 1;
+                    dateMonth = dateMonth < 10 ? '0' + dateMonth : dateMonth.toString();
+                    if (nameTxtValue.toUpperCase().indexOf(nameFilter) > -1 && 
+                        (statusFilter === "" || statusTxtValue.toUpperCase() === statusFilter) &&
+                        (monthFilter === "" || dateMonth === monthFilter)) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
