@@ -4,15 +4,26 @@
 {% load widget_tweaks %}
 {% block content %}
 <div class="container min-vh-100 d-flex justify-content-center align-items-center">
-    <div class="card w-75">
-        <div class="card-body">
-            <h1 class="card-title text-center">eClaim MITASA</h1>
-            <form action="{% url 'user:login' %}" method="post">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <div class="card">
+          <div class="card-body">
+            <img src="{% static 'img/MITASA_LOGO_3_nobg.png' %}" class="img-fluid" alt="Sample image">
+          </div>
         </div>
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <div class="divider d-flex align-items-center my-4">
+            <p class="text-center fw-bold mb-0 h1">MITASA eClaim</p>
+          </div>
+        <form action="{% url 'user:login' %}" method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock content %}
