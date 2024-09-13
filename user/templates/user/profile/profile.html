@@ -39,6 +39,9 @@
                        placeholder="{{ request.user.email }}"
                        disabled="">
             </fieldset>
+            {% block password_change %}
+            <a href="{% url 'user:password_change' %}">Change Password</a>
+            {% endblock password_change %}
             <hr class="hr">
         {% endblock profile %}
         {% block bank %}

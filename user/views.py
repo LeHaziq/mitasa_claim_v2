@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .models import Profile
 from .forms import UserForm, ProfileForm
+from django.contrib.auth.forms import PasswordChangeForm
 
 # View Functions
 def login_view(request):
@@ -83,3 +84,18 @@ def profile_edit(request):
         'form': form,
     }
     return render(request, 'user/profile/profile_edit.html', context)
+
+def password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect("user:profile")
+    else:
+        form = PasswordChangeForm(user=request.user)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'user/profile/password_change.html', context)
