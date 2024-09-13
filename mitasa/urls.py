@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import index
+from user.views import login_view as login
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', login, name='index'),
     path('', include('helper.urls')),
     path('user/', include('user.urls')),
     path('claim/', include('claim.urls')),
